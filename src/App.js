@@ -1,6 +1,6 @@
 import React, {Component, lazy, Suspense} from "react";
 import './App.css';
-import {BrowserRouter, createBrowserRouter, Route, Routes} from 'react-router-dom';
+import {createHashRouter} from 'react-router-dom';
 import Homepage from "./routes/Homepage/Homepage";
 import UsersListContainer from "./components/Users/UsersList/UsersListContainer";
 import Layout from "./components/Layout/Layout";
@@ -62,7 +62,7 @@ const App = () => {
     )
 }
 
-const router = createBrowserRouter([
+const router = createHashRouter([
     {
         path: "/",
         element: <Layout/>,
