@@ -1,0 +1,10 @@
+footer{
+    grid-area: footer;
+}
+
+.year{
+    text-align: center;
+    background: #ffe2ec;
+    color: #c40000;
+    font-weight: bold;
+}

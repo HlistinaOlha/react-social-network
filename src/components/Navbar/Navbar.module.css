@@ -1,0 +1,48 @@
+.nav {
+    grid-area: nav;
+    background-color: #ffe2ec;
+    padding: 15px;
+}
+
+.item, .item a{
+    color: #c40000;
+    font-weight: bold;
+}
+
+.item a{
+    text-decoration: none;
+}
+
+.item .active{
+    opacity: 0.6;
+}
+
+.item .pending{
+    color: deepskyblue;
+}
+
+.users{
+    margin: 1rem 0;
+}
+
+.photo{
+    width:30px;
+    height: 30px;
+    background-color: yellow;
+    border-radius: 50%;
+}
+
+
+.friendsContainer{
+    gap: .5rem;
+}
+
+
+.friendsContainer, .friend{
+    display: flex;
+}
+
+.friend{
+    flex-direction: column;
+    align-items: center;
+}

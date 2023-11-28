@@ -1,0 +1,53 @@
+/*
+.postForm{
+    display: flex;
+    flex-direction: column;
+}*/
+
+.usersContainer{
+    padding: 0;
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.submitBtn {
+    display: block;
+}
+
+.showMoreBtn {
+    font-size: 20px;
+    padding: 12px;
+    background: green;
+    color: white;
+    border-radius: 3px;
+    border: none;
+    cursor: pointer;
+    display: block;
+    margin: 1rem auto 0;
+}
+
+.item{
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.pagination {
+    text-align: center;
+    background: #4f92ff;
+    overflow-x: scroll;
+    width: 500px;
+}
+
+.page{
+    color: white;
+    margin: .5rem;
+    cursor: pointer;
+}
+
+.page.active {
+    font-weight: bold;
+}
+

@@ -1,0 +1,9 @@
+.image{
+ width: 20px;
+ height: 20px;
+}
+
+.dialogItemContainer{
+ display: flex;
+ margin-right: 1rem;
+}
