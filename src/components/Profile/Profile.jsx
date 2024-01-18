@@ -8,7 +8,6 @@ const Profile = () => {
     return (
             <div className={styles.main}>
                 <ProfileItemContainer/>
-                <PostListContainer/>
             </div>
         )
 

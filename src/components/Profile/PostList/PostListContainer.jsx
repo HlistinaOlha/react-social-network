@@ -1,8 +1,10 @@
 import React, {memo} from "react";
 import {addPost} from "../../../redux/profile-reducer";
 import PostList from "./PostList";
-import {connect, useDispatch, useSelector} from "react-redux";
-
+import {useDispatch, useSelector} from "react-redux";
+import {getPosts, getPostText} from "../../../redux/selectors/profile-selectors";
+import {useAuth} from "../../../hook/useAuth";
+import { reset } from 'redux-form';
 //1)CREATING CONTAINER COMPONENT
 
 /*const PostListContainer = () => {
@@ -53,17 +55,22 @@ const PostListContainer = connect(mapStateToProps, mapDispatchToProps)(PostList)
 const PostListContainer =  memo(() => {
     const dispatch = useDispatch()
 
-    const posts = useSelector(state => state.profilePage.posts)
-    const postText = useSelector(state => state.profilePage.postText)
+    const posts = useSelector(state => getPosts(state))
+    const postText = useSelector(state => getPostText(state))
+    const {authorisedUser} = useAuth()
 
     const addNewPost = (postText) => {
         dispatch(addPost(postText))
+        dispatch(reset('post'));
     }
 
     return (
         <PostList posts={posts}
                   postText={postText}
-                  addNewPost={addNewPost}/>
+                  addNewPost={addNewPost}
+                  image={authorisedUser?.photos.small}
+                  name={authorisedUser?.fullName}
+        />
     )
 })
 

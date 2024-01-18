@@ -1,5 +1,12 @@
 import {createSelector} from "reselect";
 
+export const getUserProfile = state => state.profilePage.profile
+export const getUserStatus = state => state.profilePage.status
+export const getPosts = state => state.profilePage.posts
+export const getPostText = state => state.profilePage.postText
+export const getIsFetching = state => state.profilePage.isFetching
+
+
 const getDialogsSelector = state => {
     console.log('GETDIALOGS')
     return state.profilePage.dialogs

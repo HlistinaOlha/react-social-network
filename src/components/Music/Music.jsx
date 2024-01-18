@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import styles from './News.module.css'
 
 const Music = () => {
@@ -69,15 +69,59 @@ const Music = () => {
 
     console.log(validBraces("())({}}{()][]["))*/
 
-    function duplicateCount(text) {
-      return new Set(text.toLowerCase().split('').sort().filter((el, idx, arr) => {
-          let eq = el === arr[idx + 1]
-         return eq
-      })).size
+    function orderType(arr) {
+
+        const isIncreasing = (prevElLength, nextElLength) => {
+            return prevElLength <= nextElLength;
+        }
+
+        const isDecreasing = (prevElLength, nextElLength) => {
+            return prevElLength >= nextElLength;
+        }
+
+        const isConstant = (prevElLength, nextElLength) => {
+            return prevElLength === nextElLength;
+        }
+
+        const checkLength = (lengthCheckFunc) => {
+
+            const compareLengthFn = (el, idx, arr) => {
+
+                let prevEl = typeof el == 'number' ? (el).toString() : el;
+
+                if (idx <= arr.length - 2) {
+                    let nextEl = typeof arr[idx + 1] == 'number' ? (arr[idx + 1]).toString() : arr[idx + 1];
+
+                    return lengthCheckFunc(prevEl.length, nextEl.length)
+                }
+                return true
+            }
+
+            return arr.every(compareLengthFn)
+        }
+
+
+        if (checkLength(isConstant)) {
+            return "Constant"
+        } else if (checkLength(isIncreasing)) {
+            return "Increasing"
+        } else if (checkLength(isDecreasing)) {
+            return "Decreasing"
+        } else {
+            return "Unsorted"
+        }
     }
 
-    console.log(duplicateCount("Indivisibilities"))
-
+    console.time('filter array');
+    console.log(orderType([0.4691358024691358,
+        0.3541666666666667,
+        4620000,
+        11700,
+        1350,
+        350,
+        30,
+        0]))
+    console.timeEnd('filter array');
     return (
         <div className={styles.main}>
             Music

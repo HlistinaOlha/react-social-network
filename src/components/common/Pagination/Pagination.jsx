@@ -1,8 +1,7 @@
 import React, {useContext} from "react";
-import styles from './Pagination.module.css'
+import styles from './Pagination.module.scss'
 import {UsersContext} from "../../Users/UsersList/UsersContext";
 import ReactPaginate from "react-paginate";
-import Preloader from "../Preloader/Preloader";
 
 const Pagination = ({setPage}) => {
 

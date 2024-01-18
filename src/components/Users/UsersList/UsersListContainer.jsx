@@ -1,3 +1,4 @@
+/*
 import React, {Component} from "react";
 import {followUser, getUsers, setIsFollowingInProgress, setPage, unfollowUser} from "../../../redux/users-reducer";
 import {useDispatch, useSelector} from "react-redux";
@@ -9,9 +10,9 @@ import {getUsersSuperSelector} from "../../../redux/selectors/users-selectors";
 
 class UsersListAPI extends Component {
 
-    /*    constructor(props) { //it is called just ONCE!!!! no need to write it if we do not pass any new props or data
+    /!*    constructor(props) { //it is called just ONCE!!!! no need to write it if we do not pass any new props or data
             super(props);
-        }*/
+        }*!/
 
     follow = (userId) => {
         this.props.follow(userId)
@@ -49,13 +50,13 @@ class UsersListAPI extends Component {
     }
 }
 
-/*const mapStateToProps = (state) => {
+/!*const mapStateToProps = (state) => {
     return {
         users: getUsersSuperSelector(state),
         messages: getMessages(state),
         messageText: getMessageText(state)
     }
-}*/
+}*!/
 
 const UsersListContainer = () => {
     const dispatch = useDispatch()
@@ -107,3 +108,4 @@ const UsersListContainer = () => {
 }
 
 export default UsersListContainer
+*/

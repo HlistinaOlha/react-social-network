@@ -1,7 +1,7 @@
 import React from "react";
 import {NavLink} from "react-router-dom";
 import Message from "../Message/Message";
-import logo from "../../../assets/images/logo192.png";
+import logo from "../../../assets/images/logo.png";
 import styles from './DialogItem.module.css'
 
 

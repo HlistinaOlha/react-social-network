@@ -1,0 +1,79 @@
+.container {
+  max-width: 1300px;
+  display: flex;
+}
+
+.landingContent {
+  color: #fff;
+  margin-bottom: 30px;
+
+  h1 {
+    font-weight: 300;
+  }
+
+  & > * {
+    color: inherit;
+    margin-bottom: 45px;
+  }
+
+  & > :last-child {
+    margin-bottom: 0;
+  }
+}
+
+.loginForm {
+  padding: 35px 25px;
+}
+
+.loginPane {
+  border: 1px solid var(--olympus-border-color);
+  border-radius: 0 5px 5px 0;
+  background-color: #fff;
+  overflow: hidden;
+  position: relative;
+  margin-bottom: 20px;
+  min-height: 300px;
+
+  & .title {
+    padding: 25px;
+    border-bottom: 1px solid var(--olympus-border-color);
+    margin-bottom: 0;
+    color: var(--olympus-heading-color);
+  }
+}
+
+.registerBtn {
+  padding: 0.6rem 0.5rem;
+  font-size: .75rem;
+  display: inline-block;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 2px solid;
+  border-radius: 0.3rem;
+  text-decoration: none;
+
+  &:focus {
+    box-shadow: none;
+    outline: 0;
+  }
+}
+
+.error span {
+  color: red;
+}
+
+.captcha {
+  margin-top: 1rem;
+}
+
+.generator {
+  font-size: 13px;
+  margin-bottom: 0.5rem;
+  color: #1e55ef;
+  cursor: pointer;
+}
+

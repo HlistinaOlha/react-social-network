@@ -1,10 +1,17 @@
 import React from "react";
-import styles from './Card.module.css'
+import styles from './Card.module.scss'
 
-const Card = ({children, className}) => {
+const Card = ({children, post = false}) => {
     return (
-        <div className={`${styles.card} ${className}`}>
-            {children}
+        <div className="uiBlock">
+            {
+                post ?
+                    <article className={`${styles.card} post`}>
+                        {children}
+                    </article>
+                    :
+                    children
+            }
         </div>
     )
 }

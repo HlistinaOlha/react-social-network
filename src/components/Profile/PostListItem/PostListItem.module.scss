@@ -1,0 +1,38 @@
+.postAuthor {
+  margin-bottom: 20px;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.postAuthor,
+.authorInfo {
+  display: flex;
+}
+
+.authorInfo {
+  align-items: center;
+}
+
+.authorName {
+  font-weight: 700;
+  margin: 0;
+}
+
+.postAdditionalInfo {
+  padding: 20px 0 0;
+  border-top: 1px solid #e6ecf5;
+  border-top: 1px solid var(--olympus-border-color);
+  display: flex;
+  align-items: center;
+}
+
+.likeContainer {
+  fill: var(--olympus-primary-color);
+  color: var(--olympus-primary-color);
+}
+
+.like {
+  margin-right: 8px;
+  width: 20px;
+  height: 18px;
+}

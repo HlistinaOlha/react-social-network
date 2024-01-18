@@ -3,21 +3,61 @@ import {updateObjectInArray} from "../utils/object-helpers";
 
 const FOLLOW = 'socialNetwork/users/FOLLOW';
 const UNFOLLOW = 'socialNetwork/users/UNFOLLOW';
+
 const SET_USERS = 'socialNetwork/users/SET_USERS';
-const SET_PAGE = 'socialNetwork/users/SET_PAGE';
+const SET_FILTERED_USERS = 'socialNetwork/users/SET_FILTERED_USERS';
+
+//const SET_TOTAL_FILTERED_USERS_COUNT = 'socialNetwork/users/SET_TOTAL_FILTERED_USERS_COUNT';
 const SET_TOTAL_USERS_COUNT = 'socialNetwork/users/SET_TOTAL_USERS_COUNT';
+
+const SET_PAGE = 'socialNetwork/users/SET_PAGE';
 const IS_FETCHING = 'socialNetwork/users/IS_FETCHING';
 const IS_FOLLOWING_IN_PROGRESS = 'socialNetwork/users/IS_FOLLOWING_IN_PROGRESS';
 
 let initialState = {
     users: [],
+    filteredUsers: [],
     isFetching: true,
     followingInProgress: [],
     pagination: {
         currentPage: 1,
-        pageSize: 4,
+        pageSize: 8,
         totalUsersCount: 0
-    }
+    },
+    usersHeaderImages: [
+        {
+            id: 1,
+            image: 'friend1',
+        },
+        {
+            id: 2,
+            image: 'friend2',
+        },
+        {
+            id: 3,
+            image: 'friend3',
+        },
+        {
+            id: 4,
+            image: 'friend4',
+        },
+        {
+            id: 5,
+            image: 'friend5',
+        },
+        {
+            id: 6,
+            image: 'friend6',
+        },
+        {
+            id: 7,
+            image: 'friend7',
+        },
+        {
+            id: 8,
+            image: 'friend8',
+        },
+    ]
 }
 
 export const usersReducer = (state = initialState, action) => {
@@ -48,14 +88,10 @@ export const usersReducer = (state = initialState, action) => {
                 ...state,
                 users: action.users
             };
-        case SET_PAGE:
+        case SET_FILTERED_USERS:
             return {
                 ...state,
-                pagination: {
-                    ...state.pagination,
-                    currentPage: action.currentPage
-                }
-
+                filteredUsers: action.filteredUsers
             };
         case SET_TOTAL_USERS_COUNT:
             return {
@@ -63,6 +99,14 @@ export const usersReducer = (state = initialState, action) => {
                 pagination: {
                     ...state.pagination,
                     totalUsersCount: action.total
+                }
+            };
+        case SET_PAGE:
+            return {
+                ...state,
+                pagination: {
+                    ...state.pagination,
+                    currentPage: action.currentPage
                 }
             };
 
@@ -91,14 +135,24 @@ export const setUsers = (users) => ({
     users
 })
 
-export const setPage = (currentPage) => ({
-    type: SET_PAGE,
-    currentPage
+export const setFilteredUsers = (filteredUsers) => ({
+    type: SET_FILTERED_USERS,
+    filteredUsers
 })
+
+/*export const setTotalFilteredUsersCount = (total) => ({
+    type: SET_TOTAL_FILTERED_USERS_COUNT,
+    total
+})*/
 
 export const setTotalUsersCount = (total) => ({
     type: SET_TOTAL_USERS_COUNT,
     total
+})
+
+export const setPage = (currentPage) => ({
+    type: SET_PAGE,
+    currentPage
 })
 
 export const setIsFetching = (isFetching) => ({
@@ -113,16 +167,16 @@ export const setIsFollowingInProgress = (isFollowingInProgress, userId) => ({
 })
 
 //thunkCreator:
-export const getUsers = (page, pageSize) => {
+export const getUsers = (isFriend, nameString, page, pageSize) => {
 
 //thunk:
     return async (dispatch) => {
         dispatch(setIsFetching(true))
 
         try {
-            let response = await usersAPI.getUsers(page, pageSize)
+            let response = await usersAPI.getUsers(isFriend, nameString, page, pageSize)
             dispatch(setIsFetching(false))
-            dispatch(setUsers(response.items))
+            isFriend ? dispatch(setFilteredUsers(response.items)) : dispatch(setUsers(response.items))
             dispatch(setTotalUsersCount(response.totalCount))
         } catch (error) {
             console.error(error);
