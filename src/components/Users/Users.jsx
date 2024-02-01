@@ -199,7 +199,7 @@ const UsersItemImage = ({index, headerImages}) => {
     //const [loaded, setLoaded] = useState(false)
 
     return (
-        <img src={require(`../../assets/images/${headerImages[index]?.image}.webp`)}
+        <img src={require(`../../assets/images/${headerImages[index]?.image}.png`)}
              alt={headerImages[index]?.image}
             //onLoad={() => setLoaded(true)
         />

@@ -3,7 +3,7 @@ import {ProfileImageItem} from "../ProfileItemImage/ProfileImage";
 import {Col} from "react-bootstrap";
 import styles from "../ProfileItem.module.scss"
 import PostListContainer from "../../PostList/PostListContainer";
-import {NavLink} from "react-router-dom";
+import {NavLink, useOutletContext} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {getUserProfile} from "../../../../redux/selectors/profile-selectors";
 import {getPageSize, getTotalUsersCount, getUsersFiltered} from "../../../../redux/selectors/users-selectors";
@@ -12,6 +12,7 @@ import CardTitle from "../../../UI/Card/CardTitle";
 import Card from "../../../UI/Card/Card";
 import CardContent from "../../../UI/Card/CardContent";
 import {getUsers} from "../../../../redux/users-reducer";
+import {Navigate, useLocation} from "react-router";
 
 const ProfileTimeline = ({}) => {
     const dispatch = useDispatch();
@@ -20,9 +21,15 @@ const ProfileTimeline = ({}) => {
     const filteredUsersCount = useSelector(state => getTotalUsersCount(state))
     const pageSize = useSelector(state => getPageSize(state))
     const usersLeft = filteredUsersCount - pageSize;
+    const [_, isCurrentUserAuthorised] = useOutletContext();
+    const location = useLocation();
 
     const loadAllFilteredUsers = () => {
         dispatch(getUsers(true, "", 1, 100))
+    }
+
+    if (!isCurrentUserAuthorised) {
+        return <Navigate to="about" state={{from: location}}/>
     }
     return (
         <>
@@ -55,7 +62,7 @@ const ProfileFriends = ({filteredUsers, filteredUsersCount, loadAllFilteredUsers
                                 {
                                     filteredUsers.map(user => (
                                         <li key={user.id}>
-                                            <NavLink to={`/profile/${user.id}`} title={user.name}>
+                                            <NavLink to={`/profile/${user.id}/about`} title={user.name}>
                                                 <ProfileImageItem image={user.photos.small}/>
                                             </NavLink>
                                         </li>

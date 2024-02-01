@@ -9,6 +9,7 @@ function ProfileItem({
                          profile,
                          status,
                          changeImage,
+                         headerImages,
                          updateProfile,
                          authorisedUser,
                          isCurrentUserAuthorised,
@@ -33,12 +34,13 @@ function ProfileItem({
                            isCurrentUserAuthorised={isCurrentUserAuthorised}
                            status={status}
                            updateImage={updateImage}
+                           headerImages={headerImages}
                            updateProfile={updateProfile}
                            isFetching={isFetching}
             />
             <Container>
                 <Row>
-                    <Outlet context={[store]}/>
+                    <Outlet context={[store, isCurrentUserAuthorised]}/>
                 </Row>
             </Container>
         </>

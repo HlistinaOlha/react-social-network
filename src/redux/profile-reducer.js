@@ -13,6 +13,16 @@ let initialState = {
     profile: null,
     status: '',
     isFetching: true,
+    topHeaderImages: [
+        {
+            id: 1,
+            image: 'topHeader1',
+        },
+        {
+            id: 2,
+            image: 'topHeader2',
+        },
+    ],
     posts: [
         {
             message: 'Hi, how are you',

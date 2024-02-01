@@ -5,6 +5,7 @@ export const getUserStatus = state => state.profilePage.status
 export const getPosts = state => state.profilePage.posts
 export const getPostText = state => state.profilePage.postText
 export const getIsFetching = state => state.profilePage.isFetching
+export const getTopHeaderImages = state => state.profilePage.topHeaderImages
 
 
 const getDialogsSelector = state => {

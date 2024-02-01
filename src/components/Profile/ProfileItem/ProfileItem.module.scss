@@ -13,11 +13,15 @@
 .profileBg {
   border-radius: 5px 5px 0 0;
   height: 300px;
-  background-image: url(https://html.crumina.net/html-olympus/img/top-header1.webp);
+  background-image: url(https://html.crumina.net/html-olympus/img/top-header2.webp);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
   background-color: var(--olympus-white-color);
+
+  &.currentUserBg{
+    background-image: url(https://html.crumina.net/html-olympus/img/top-header1.webp);
+  }
 
   &:after {
     content: '';
@@ -40,6 +44,7 @@
   text-align: center;
   z-index: 4;
 }
+
 
 .profileImgContainer {
   border-radius: 100%;
@@ -236,6 +241,7 @@
   font-size: 10px;
   font-weight: 800;
 }
+
 //uploadPhoto
 .uploadPhotoItem {
   display: inline-block;
