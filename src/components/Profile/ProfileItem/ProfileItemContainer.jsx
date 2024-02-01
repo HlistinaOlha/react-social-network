@@ -3,7 +3,12 @@ import {useParams} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {editProfile, getProfile, getStatus, uploadImage} from "../../../redux/profile-reducer";
 import ProfileItem from "./ProfileItem";
-import {getIsFetching, getUserProfile, getUserStatus} from "../../../redux/selectors/profile-selectors";
+import {
+    getIsFetching,
+    getTopHeaderImages,
+    getUserProfile,
+    getUserStatus
+} from "../../../redux/selectors/profile-selectors";
 import {useAuth} from "../../../hook/useAuth";
 import {UsersContext} from "../../Users/UsersList/UsersContext";
 import {
@@ -26,6 +31,7 @@ function ProfileItemContainer() {
     const totalUsersCount = useSelector(state => getTotalUsersCount(state))
     const pageSize = useSelector(state => getPageSize(state))
     const currentPage = useSelector(state => getCurrentPage(state))
+    const headerImages = useSelector(state => getTopHeaderImages(state))
     //const navigate = useNavigate();
     //const goBack = () => navigate(-1)
 
@@ -63,6 +69,7 @@ function ProfileItemContainer() {
                             loadProfile={loadProfile}
                             loadStatus={loadStatus}
                             changeImage={changeImage}
+                            headerImages={headerImages}
                             updateProfile={updateProfile}
                             loadFilteredUsers={loadFilteredUsers}
             />
