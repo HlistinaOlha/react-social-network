@@ -15,8 +15,8 @@ const ModalWindowContainer = ({text, dependency, onSubmit, formId = '', submitBt
         setModalShow(false)
     }
 
-    const handleSubmit = () => {
-        onSubmit()
+    const handleSubmit = (e, id, text) => {
+        onSubmit(e, id, text)
         hideModal()
     }
 
@@ -54,14 +54,20 @@ const ModalWindow = ({text, onHide, handleSubmit, formId, submitBtnText, childre
                 <Modal.Title id="contained-modal-title-vcenter">
                     {text}
                 </Modal.Title>
-                <button type="button" onClick={onHide} className="btn-close" data-bs-dismiss="modal" aria-label="Close"/>
+                <button type="button"
+                        onClick={onHide}
+                        className="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Close"/>
             </Modal.Header>
             <Modal.Body>
                 {children}
             </Modal.Body>
             <Modal.Footer>
                 {submitBtnText &&
-                <Button type="submit" form={formId}>{submitBtnText}</Button>
+                <Button type="submit"
+                        form={formId}
+                >{submitBtnText}</Button>
                 }
                 <Button onClick={onHide}>Close</Button>
             </Modal.Footer>

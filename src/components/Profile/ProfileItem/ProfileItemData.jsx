@@ -3,13 +3,14 @@ import styles from "./ProfileItem.module.scss";
 import React from "react";
 import CardTitle from "../../UI/Card/CardTitle";
 import CardContent from "../../UI/Card/CardContent";
+import classNames from 'classnames';
 
 const ProfileData = ({profile, title, additionalInfo, children}) => {
     return (
         <Card>
             <CardTitle title={title}/>
             <CardContent>
-                <ul className={`${styles.personalInfo} ${styles.widget}`}>
+                <ul className={classNames(styles.personalInfo, styles.widget)}>
                     {
                         profile.aboutMe &&
                         <li>

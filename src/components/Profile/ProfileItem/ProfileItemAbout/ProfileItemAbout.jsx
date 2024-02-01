@@ -10,6 +10,7 @@ import {useAuth} from "../../../../hook/useAuth";
 import ProfileData from "../ProfileItemData";
 import CardTitle from "../../../UI/Card/CardTitle";
 import CardContent from "../../../UI/Card/CardContent";
+import classNames from 'classnames';
 
 const ProfileAbout = ({}) => {
     const profile = useSelector(state => getUserProfile(state))
@@ -72,7 +73,8 @@ const Contacts = ({contacts}) => {
 
 const ContactsItem = ({contactTitle, contactValue}) => {
     return (
-        <a href={contactValue} className={`${styles.socialItem} ${styles[`${contactTitle}Bg`]}`}>
+        <a href={contactValue}
+           className={classNames(styles.socialItem, styles[`${contactTitle}Bg`])}>
             {contactTitle}
         </a>
     )

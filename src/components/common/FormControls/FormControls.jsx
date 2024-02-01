@@ -3,6 +3,7 @@ import styles from './FormControls.module.scss'
 import {Field} from "redux-form";
 import Form from 'react-bootstrap/Form';
 import {FloatingLabel} from "react-bootstrap";
+import classNames from 'classnames';
 
 const FormControl = ({meta: {touched, error, form}, children}) => {
 
@@ -10,7 +11,10 @@ const FormControl = ({meta: {touched, error, form}, children}) => {
 
 
     return (
-        <Form.Group className={`${styles.formControl} ${hasError ? styles.error : ""}`}>
+        <Form.Group
+            className={classNames({
+                [styles.error]: hasError
+            }, styles.formControl)}>
             {children}
             {
                 hasError && <Form.Control.Feedback type="invalid">{error}</Form.Control.Feedback>
@@ -76,7 +80,9 @@ export const Checkbox = (props) => {
 
     return <FormControl {...props}>
         <Form.Label className={styles.formCheckLabel}>
-            <Form.Check className={styles.formCheck} {...input} {...restProps} />
+            <Form.Check className={styles.formCheck}
+                        {...input}
+                        {...restProps} />
             {label}
         </Form.Label>
     </FormControl>

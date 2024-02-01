@@ -9,6 +9,7 @@ import styles from './PostList.module.scss'
 import {createField, TextArea} from "../../common/FormControls/FormControls";
 import {Form} from "react-bootstrap";
 import {ProfileImageItem} from "../ProfileItem/ProfileItemImage/ProfileImage";
+import classNames from 'classnames';
 
 const maxLength50 = maxLengthCreator(50)
 
@@ -27,7 +28,8 @@ const PostForm = ({image, handleSubmit}) => {
         <Form className={styles.postForm}
               onSubmit={handleSubmit(submit)}>
             <div className={styles.postAuthor}>
-                <ProfileImageItem image={image} classNames={`${styles.postAvatar} avatar`}/>
+                <ProfileImageItem image={image}
+                                  classNames={classNames(styles.postAvatar, 'avatar')}/>
                 {createField(TextArea, "postText", 'Add new post...')}
             </div>
             <button className="btn btn-primary">Add Post</button>
@@ -54,7 +56,6 @@ const PostList = (props) => {
 
     const changePost = (e, postId, postText) => {
         e.preventDefault()
-        console.log(e)
         dispatch(editPost(postId, postText))
     }
 

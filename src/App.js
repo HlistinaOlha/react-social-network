@@ -17,6 +17,7 @@ import ProfileTimeline from "./components/Profile/ProfileItem/ProfileItemTimelin
 import ProfileAbout from "./components/Profile/ProfileItem/ProfileItemAbout/ProfileItemAbout";
 import FriendsPage from "./routes/FriendsPage/FriendsPage";
 import UsersPage from "./routes/UsersPage/UsersPage";
+import classNames from 'classnames';
 
 const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
 const News = lazy(() => import('./components/News/News'));
@@ -43,8 +44,18 @@ const AppContainer = () => {
 
 class AppAPI extends Component {
 
+    catchAllUnhandledErrors = (promiseRejectionEvent) => {
+        alert("Some error occured")
+        console.error(promiseRejectionEvent)
+    }
+
     componentDidMount() {
         this.props.handleInitializeApp()
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
     }
 
     render() {
@@ -61,10 +72,20 @@ const App = () => {
     const {isAuthorized} = useAuth()
 
     return (
-        <div className={`app-wrapper ${!isAuthorized ? 'bg-wrapper' : ""}`}>
+        <div className={classNames({
+            'bg-wrapper': !isAuthorized
+        }, 'app-wrapper')}>
             <RouterProvider router={router}/>
         </div>
     )
+}
+
+export const SamuraiJsApp = () => {
+    return <Suspense fallback={<Preloader/>}>
+        <Provider store={store}>
+            <AppContainer/>
+        </Provider>
+    </Suspense>
 }
 
 const router = createHashRouter([
@@ -83,7 +104,7 @@ const router = createHashRouter([
                 element: <RequireAuth>
                     <Profile/>
                 </RequireAuth>,
-                children:[
+                children: [
                     {
                         path: "",
                         element: <RequireAuth>
@@ -101,14 +122,14 @@ const router = createHashRouter([
                         element: <RequireAuth>
                             <FriendsPage/>
                         </RequireAuth>
-                    },
-                    {
-                        path: "users",
-                        element: <RequireAuth>
-                            <UsersPage/>
-                        </RequireAuth>,
-                    },
+                    }
                 ]
+            },
+            {
+                path: "users",
+                element: <RequireAuth>
+                    <UsersPage/>
+                </RequireAuth>,
             },
             {
                 path: "dialogs",
@@ -143,14 +164,6 @@ const router = createHashRouter([
         ]
     }
 ]);
-
-export const SamuraiJsApp = () => {
-    return <Suspense fallback={<Preloader/>}>
-        <Provider store={store}>
-            <AppContainer/>
-        </Provider>
-    </Suspense>
-}
 
 export default SamuraiJsApp;
 

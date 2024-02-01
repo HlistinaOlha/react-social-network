@@ -14,7 +14,8 @@ const PostListItem = ({id, image, name, message, likes, removePost, changePost})
         <Card post={true}>
             <div className={styles.postAuthor}>
                 <div className={styles.authorInfo}>
-                    <ProfileImageItem image={image} classNames="avatar"/>
+                    <ProfileImageItem image={image}
+                                      classNames="avatar"/>
                     <h6 className={styles.authorName}>{name}</h6>
                 </div>
                 <Dropdown id={id}
@@ -42,13 +43,20 @@ const Dropdown = ({id, message, removePost, changePost}) => {
             <ul className="moreDropdown">
                 <li>
                     <ModalWindowContainer text="Edit post"
-                                          onSubmit={changePost}
-                                          submitBtnText="Edit post">
+                                          onSubmit={(e) => changePost(e, id, message)}
+                                          submitBtnText="Edit"
+                                          formId="postTextEdit"
+                    >
                         <EditPostReduxForm initialValues={{postTextEdit: message}}/>
                     </ModalWindowContainer>
                 </li>
                 <li>
-                    <a href="#" onClick={(e) => removePost(e, id)}>Delete Post</a>
+                    <ModalWindowContainer text="Delete post"
+                                          onSubmit={(e) => removePost(e, id)}
+                                          submitBtnText="Delete"
+                                          formId="">
+                        <div className="pb-3 pt-3">Are you sure you want to delete post <b>"{message}"</b>?</div>
+                    </ModalWindowContainer>
                 </li>
             </ul>
         </div>

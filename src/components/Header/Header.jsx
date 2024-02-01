@@ -13,7 +13,7 @@ import {getIsFetching} from "../../redux/selectors/auth-selectors";
 import {logout} from "../../redux/auth-reducer";
 import {updateStatus} from "../../redux/profile-reducer";
 import {useAuth} from "../../hook/useAuth";
-
+import classNames from 'classnames';
 
 const HeaderContainer = () => {
     const dispatch = useDispatch()
@@ -48,7 +48,7 @@ const Header = ({isAuthorized, authorisedUser, authorisedUserStatus, changeStatu
         '/profile': 'Profile Page',
         '/profile/friends': 'Friends',
         '/profile/about': 'About',
-        '/profile/users': 'Users'
+        '/users': 'Users'
     }
 
     const [currentIconStatus, setCurrentIconStatus] = useState('online')
@@ -65,10 +65,11 @@ const Header = ({isAuthorized, authorisedUser, authorisedUserStatus, changeStatu
         invisible: 'invisible'
     }
 
-
     return (
         authorisedUser &&
-        <header className={`${isAuthorized ? styles.headerDark : ""} ${styles.header}`}>
+        <header className={classNames({
+            [styles.headerDark]: isAuthorized
+        }, styles.header)}>
             <Container>
                 <div className={styles.headerContent}>
                     {
@@ -77,13 +78,15 @@ const Header = ({isAuthorized, authorisedUser, authorisedUserStatus, changeStatu
                                 <div className={styles.pageTitle}>
                                     <h6>{pageTitles[path]}</h6>
                                 </div>
-                                <div className={`${styles.author} more`}>
+                                <div className={classNames(styles.author, 'more')}>
                                     <div className={styles.authorThumb}>
                                         {authorisedUser.photos.small &&
                                         <>
-                                            <ProfileImageItem image={authorisedUser.photos.small} classNames="avatar"/>
+                                            <ProfileImageItem image={authorisedUser.photos.small}
+                                                              classNames="avatar"/>
                                             <span
-                                                className={`${styles.iconStatus} ${styles[iconStatus[currentIconStatus]]}`}/>
+                                                className={classNames(styles.iconStatus,
+                                                    styles[iconStatus[currentIconStatus]])}/>
                                         </>
                                         }
                                         <Dropdown iconStatus={iconStatus}
@@ -123,9 +126,9 @@ const Header = ({isAuthorized, authorisedUser, authorisedUserStatus, changeStatu
 const Dropdown = ({iconStatus, setIconStatus, logout, children}) => {
 
     return (
-        <div className={`${styles.headerDropdown} moreDropdown moreWithTriangle`}>
+        <div className={classNames(styles.headerDropdown, 'moreDropdown', 'moreWithTriangle')}>
             <div className={styles.scrollbar}>
-                <div className="uiBlockTitle uiBlockTitleSmall">
+                <div className={classNames('uiBlockTitle', ' uiBlockTitleSmall')}>
                     <h6 className="title">Your Account</h6>
                 </div>
                 <ul className={styles.accountSettings}>

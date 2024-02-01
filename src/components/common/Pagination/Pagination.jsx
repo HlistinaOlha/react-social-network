@@ -2,6 +2,7 @@ import React, {useContext} from "react";
 import styles from './Pagination.module.scss'
 import {UsersContext} from "../../Users/UsersList/UsersContext";
 import ReactPaginate from "react-paginate";
+import classNames from 'classnames';
 
 const Pagination = ({setPage}) => {
 
@@ -33,8 +34,8 @@ const Pagination = ({setPage}) => {
                     pageClassName={styles.pageItem}
                     pageLinkClassName={styles.pageLink}
 
-                    previousClassName={`${styles.pageItem} ${styles.prev}`}
-                    nextClassName={`${styles.pageItem} ${styles.next}`}
+                    previousClassName={classNames(styles.pageItem, styles.prev)}
+                    nextClassName={classNames(styles.pageItem, styles.next)}
 
                     previousLinkClassName={styles.pageLink}
                     nextLinkClassName={styles.pageLink}

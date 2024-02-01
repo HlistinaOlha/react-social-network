@@ -4,13 +4,11 @@ import {Form, reduxForm} from "redux-form";
 import styles from "../ProfileItem/ProfileItem.module.scss";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
 import {createField, Input, InputFile, InputSearch, Radio, TextArea} from "../../common/FormControls/FormControls";
-import {Row} from "react-bootstrap";
-import {Col} from "react-bootstrap";
+import {Col, Row} from "react-bootstrap";
 import {required} from "../../../utils/validators/validators";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from '@mui/icons-material/Clear';
-import {reset} from 'redux-form';
-import {useDispatch} from "react-redux";
+import classNames from 'classnames';
 
 const UploadImageForm = ({handleSubmit, updateImage, isFetching}) => {
 
@@ -73,7 +71,7 @@ const SearchUserForm = ({handleSubmit, onSubmit, formId}) => {
             </Form>
             {searchString ?
                 <button onClick={clearSearchField}
-                        className={`${styles.searchBtnWrapper} ${styles.submitBtn}`}>
+                        className={classNames(styles.searchBtnWrapper, styles.submitBtn)}>
                     <ClearIcon/>
                 </button>
                 :
