@@ -7,7 +7,11 @@ export const required = value => {
 }
 
 export const maxLengthCreator = (maxLength) => (value) => {
-    if (value.length > maxLength) {
+    if (!value) {
+        return 'Your post is empty'
+    }
+
+    if (value.length &&  value.length > maxLength) {
         return `Max length is ${maxLength} symbols`
     }
 

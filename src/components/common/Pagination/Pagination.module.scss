@@ -1,0 +1,84 @@
+.pagination {
+  display: flex;
+  justify-content: center;
+  padding-left: 0;
+  list-style: none;
+}
+
+.pageItem {
+  margin: 0 0.2rem;
+}
+
+.breakLink {
+  color: var(--olympus-purple-dark);
+}
+
+.breakItem,
+.pageLink {
+  padding: 0.375rem 0.75rem;
+}
+
+.pageLink {
+  border-radius: 5px;
+  color: var(--olympus-white-color);
+  position: relative;
+  display: block;
+  cursor: pointer;
+  text-decoration: none;
+  background-color: var(--olympus-purple);
+  border: 1px solid var(--olympus-purple-dark);
+  transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+
+  &:hover {
+    z-index: 2;
+    color: var(--olympus-white-color);
+    background-color: var(--olympus-purple-dark);
+    border-color: var(--olympus-purple);
+  }
+
+  &:focus {
+    z-index: 3;
+    color: var(--olympus-white-color);
+    background-color: var(--olympus-purple-dark);
+    outline: 0;
+  }
+}
+
+.pageItem:not(:first-child) .pageLink {
+  margin-left: -1px;
+}
+
+.pageItem.active .pageLink {
+  z-index: 3;
+  color: var(--olympus-white-color);
+  background-color: var(--olympus-purple-dark);
+  border-color: var(--olympus-purple);
+}
+
+.pageItem:first-child .pageLink {
+  border-radius: 0.5rem 0.25rem 0.25rem 0.5rem
+}
+
+.pageItem:last-child .pageLink {
+  border-radius: 0.25rem 0.5rem 0.5rem 0.25rem;
+}
+
+.pageItem.disabled .pageLink {
+  color: var(--olympus-violet);
+  pointer-events: none;
+  background-color: #fff;
+  border-color: var(--olympus-purple);
+  opacity: 0.3;
+}
+
+.pageItem.disabled {
+  cursor: text;
+}
+
+.pageItem.prev .pageLink,
+.pageItem.next .pageLink {
+  color: var(--olympus-purple);
+  background-color: var(--olympus-white-color);
+}
+
+

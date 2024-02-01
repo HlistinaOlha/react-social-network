@@ -1,0 +1,90 @@
+.formGroup {
+  margin-bottom: 1.4rem;
+}
+
+.formControl {
+  width: 100%;
+
+  .textarea {
+    min-height: 60px;
+    height: 60px;
+    resize: none;
+    padding: 15px 60px 15px 15px;
+    transition: all .3s ease;
+
+    &::placeholder {
+      color: var(--olympus-body-font-color);
+    }
+
+    &:focus {
+      min-height: 100px;
+    }
+  }
+}
+
+.formControl.error input,
+.formControl.error textarea {
+  border: 1px solid red;
+}
+
+.formControl.error span {
+  color: red;
+  font-size: .875rem;
+}
+
+.formControl .formFloating > label {
+  font-size: 14px;
+  color: var(--olympus-placeholder-form-color);
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 30px white inset !important;
+}
+
+.formFloating {
+  margin-bottom: 1rem;
+
+  input:focus {
+    color: #212529;
+    background-color: transparent;
+    border: 1px solid #ffc6ba;
+    outline: 0;
+    box-shadow: none;
+  }
+}
+
+.formCheck {
+
+  input[type=checkbox] {
+    cursor: pointer;
+    height: 20px;
+    width: 20px;
+    border: 1px solid var(--olympus-border-color);
+    border-radius: 0;
+
+    &:checked {
+      background-color: var(--olympus-primary-color);
+      border-color: var(--olympus-primary-color);
+    }
+
+    &:focus {
+      border-color: var(--olympus-primary-color);
+      box-shadow: none;
+    }
+  }
+}
+
+.formCheckLabel {
+  display: flex;
+  margin: 25px auto 0;
+  font-size: 13px;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  width: max-content;
+}
+
+

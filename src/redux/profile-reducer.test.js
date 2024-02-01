@@ -1,6 +1,4 @@
 import profileReducer, {addPost, deletePost} from "./profile-reducer";
-import {render, screen} from "@testing-library/react";
-import App from "../App";
 
 let initialState = {
     posts: [

@@ -1,0 +1,54 @@
+.friendItem {
+  border-radius: 5px
+}
+
+.friendHeaderThumb {
+  border-bottom: 1px solid var(--olympus-border-color);
+  overflow: hidden;
+
+  img {
+    height: 117px;
+    width: 100%;
+    display: block;
+  }
+}
+
+.friendItemContent {
+  padding: 0 25px 25px;
+  text-align: center;
+  position: relative;
+}
+
+.friendAvatar {
+  margin-top: -49px;
+  position: relative;
+  margin-bottom: 30px;
+
+  .authorThumb {
+    margin: 0 auto 10px;
+    height: 98px;
+    width: 98px;
+    min-height: 98px;
+    min-width: 98px;
+
+    img {
+      border: 4px solid var(--olympus-white-color);
+      display: block;
+    }
+  }
+}
+
+.authorThumb {
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+
+  img {
+    border-radius: 100%;
+    overflow: hidden;
+  }
+}
+
+.authorContent {
+  height: 85px;
+}

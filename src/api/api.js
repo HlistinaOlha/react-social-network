@@ -9,8 +9,8 @@ const instance = axios.create({
 })
 
 export const usersAPI = {
-    getUsers(page, pageSize) {
-        return instance.get(`users?page=${page}&count=${pageSize}`)
+    getUsers(isFriend, nameString = '', page, pageSize) {
+        return instance.get(`users?page=${page}&count=${pageSize}&friend=${isFriend}&term=${nameString}`)
             .then(response => response.data)
     },
     followUser(id) {
@@ -28,6 +28,10 @@ export const profileAPI = {
         return instance.get(`profile/${id}`)
             .then(response => response.data)
     },
+    editProfile(profile) {
+        return instance.put(`/profile`, profile)
+            .then(response => response.data)
+    },
     getStatus(id) {
         return instance.get(`profile/status/${id}`)
             .then(response => response.data)
@@ -37,7 +41,10 @@ export const profileAPI = {
             .then(response => response.data)
     },
     uploadImage(image) {
-        return instance.put(`profile/photo`, {image}, {
+        const formData = new FormData();
+        formData.append("image", image)
+
+        return instance.put(`profile/photo`, formData, {
             headers: {
                 Accept: "application/json",
                 "Content-type": "multipart/form-data",

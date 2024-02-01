@@ -2,6 +2,7 @@ import React from "react";
 import styles from './Navbar.module.css'
 import {NavLink} from "react-router-dom";
 import ava from '../../assets/images/ava.png'
+import classNames from 'classnames';
 
 const navItems = [
     {
@@ -44,7 +45,9 @@ const Sidebar = ({friends}) => {
                 {
                     navItems.map((item, index) => (
                         <div key={item.id}
-                             className={`${styles.item} ${index === navItems.length - 2 ? styles.users : ''} `}>
+                             className={classNames({
+                                 [styles.users]: index === navItems.length - 2
+                             }, styles.item)}>
                             <NavLink to={item.link}
                                      className={({isActive, isPending}) =>
                                          isActive

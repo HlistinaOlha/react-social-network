@@ -1,26 +1,40 @@
-import React, {PureComponent} from "react";
+import React from "react";
 import PostListItem from "../PostListItem/PostListItem";
-import styles from './PostList.module.css'
-import {Field, reduxForm} from "redux-form";
-import {maxLengthCreator, required} from "../../../utils/validators/validators";
-import {TextArea} from "../../common/FormControls/FormControls";
-import * as PropTypes from "prop-types";
+import {reduxForm, SubmissionError} from "redux-form";
+import {maxLengthCreator} from "../../../utils/validators/validators";
+import Card from "../../UI/Card/Card";
+import {deletePost, editPost} from "../../../redux/profile-reducer";
+import {useDispatch} from "react-redux";
+import styles from './PostList.module.scss'
+import {createField, TextArea} from "../../common/FormControls/FormControls";
+import {Form} from "react-bootstrap";
+import {ProfileImageItem} from "../ProfileItem/ProfileItemImage/ProfileImage";
+import classNames from 'classnames';
 
-const maxLength5 = maxLengthCreator(5)
+const maxLength50 = maxLengthCreator(50)
 
-const PostForm = ({handleSubmit}) => {
+const PostForm = ({image, handleSubmit}) => {
+
+    function submit(values) {
+        const error = maxLength50(values.postText)
+        if (error) {
+            throw new SubmissionError({_error: error, postText: error})
+        }
+        return handleSubmit()
+    }
+
 
     return (
-        <form className={styles.postForm}
-              onSubmit={handleSubmit}>
-            <Field component={TextArea}
-                   name={'postText'}
-                   validate={[required, maxLength5]}
-            />
-            <button type={"submit"}
-                    className={styles.submitBtn}>Add post
-            </button>
-        </form>
+        <Form className={styles.postForm}
+              onSubmit={handleSubmit(submit)}>
+            <div className={styles.postAuthor}>
+                <ProfileImageItem image={image}
+                                  classNames={classNames(styles.postAvatar, 'avatar')}/>
+                {createField(TextArea, "postText", 'Add new post...')}
+            </div>
+            <button className="btn btn-primary">Add Post</button>
+        </Form>
+
     )
 }
 
@@ -28,26 +42,45 @@ const PostReduxForm = reduxForm({form: 'post'})(PostForm)
 
 const PostList = (props) => {
 
-    let {posts, addNewPost} = props;
+    let {image, name, posts, addNewPost} = props;
+    const dispatch = useDispatch()
 
     const onSubmit = (data) => {
         addNewPost(data.postText)
     }
 
+    const removePost = (e, postId) => {
+        e.preventDefault()
+        dispatch(deletePost(postId))
+    }
+
+    const changePost = (e, postId, postText) => {
+        e.preventDefault()
+        dispatch(editPost(postId, postText))
+    }
+
     return (
-        <>
-            <h3>My posts</h3>
-            <PostReduxForm onSubmit={onSubmit}/>
+        <div>
+            <Card post={true}>
+                <PostReduxForm image={image} onSubmit={onSubmit}/>
+            </Card>
             <ul>
                 {
                     [...posts].reverse().map(post => (
                         <PostListItem key={post.id}
+                                      id={post.id}
+                                      image={image}
+                                      name={name}
                                       message={post.message}
-                                      likes={post.likes}/>
+                                      likes={post.likes}
+                                      removePost={removePost}
+                                      changePost={changePost}
+                        />
                     ))
                 }
             </ul>
-        </>
+        </div>
+
     )
 }
 

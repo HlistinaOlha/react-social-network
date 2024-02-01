@@ -1,0 +1,279 @@
+.ava {
+  display: block;
+  width: 120px;
+  height: 120px;
+  border-radius: 100%;
+}
+
+.profileData,
+.profileBg {
+  position: relative;
+}
+
+.profileBg {
+  border-radius: 5px 5px 0 0;
+  height: 300px;
+  background-image: url(https://html.crumina.net/html-olympus/img/top-header1.webp);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: var(--olympus-white-color);
+
+  &:after {
+    content: '';
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    box-shadow: inset 0 -120px 55px -30px rgba(0, 0, 0, .5);
+    z-index: -1;
+  }
+}
+
+.profileUser {
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%, 0);
+  top: 194px;
+  text-align: center;
+  z-index: 4;
+}
+
+.profileImgContainer {
+  border-radius: 100%;
+  border: 6px solid var(--olympus-white-color);
+  margin: 0 auto;
+  overflow: hidden;
+  width: 132px;
+  height: 132px;
+  background-color: var(--olympus-grey-light);
+}
+
+.profileSection {
+  position: relative;
+  padding: 40px 30px 50px;
+  z-index: 3;
+}
+
+/*.profileContent {
+  padding: 20px 30px;
+
+  .status {
+    font-size: 13px;
+    padding: 0;
+  }
+}*/
+
+.profileName {
+  font-weight: 700;
+  color: var(--olympus-heading-color);
+  text-transform: capitalize;
+}
+
+.widget {
+  text-align: left;
+
+  & + .widget {
+    margin-top: 35px;
+  }
+}
+
+.personalInfo {
+  padding: 0;
+
+  li {
+    margin-bottom: 30px;
+
+    .title {
+      color: var(--olympus-heading-color);
+      font-weight: 500;
+    }
+
+    .text {
+      color: var(--olympus-body-font-color);
+      display: block;
+      overflow: hidden;
+    }
+
+  }
+}
+
+.profileMenu {
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+
+  a {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--olympus-grey-lighter);
+    display: block;
+
+    &:hover, &.active {
+      color: var(--olympus-heading-color);
+    }
+  }
+}
+
+//socials
+
+.socials {
+  .socialItem {
+    font-size: 11px;
+    color: var(--olympus-white-color);
+    padding: 7px 15px;
+    display: block;
+    border-radius: 3px;
+    margin-bottom: 15px;
+    text-transform: capitalize;
+    text-align: center;
+  }
+
+  .facebookBg {
+    background-color: var(--olympus-c-facebook);
+  }
+
+  .twitterBg {
+    background-color: var(--olympus-c-twitter);
+  }
+
+  .githubBg {
+    background-color: #000000;
+  }
+
+  .vkBg {
+    background-color: #2787F5;
+  }
+
+  .instagramBg {
+    background: linear-gradient(90deg, rgba(130, 24, 247, 1) 0%, rgba(246, 12, 189, 1) 35%, rgba(244, 192, 12, 1) 100%);
+  }
+
+  .websiteBg {
+    background-color: #949494;
+  }
+
+  .youtubeBg {
+    background-color: #FF0000;
+  }
+
+  .mainLinkBg {
+    background-color: #D81F26;
+  }
+
+}
+
+//status
+
+.statusForm {
+  position: relative;
+  margin: 15px 25px;
+
+  .status {
+    padding: 8px 50px 8px 15px;
+    font-size: 12px;
+
+    &:focus {
+      color: #212529;
+      background-color: transparent;
+      border-color: #ffc6ba;
+      outline: 0;
+      box-shadow: none;
+    }
+  }
+}
+
+.submitBtn {
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+  height: 100%;
+  width: 35px;
+  text-align: center;
+  line-height: 100%;
+  color: var(--olympus-white-color);
+  fill: var(--olympus-white-color);
+  border: none;
+  border-radius: 0 5px 5px 0;
+  background-color: var(--olympus-purple);
+  overflow: hidden;
+
+}
+
+//followedUsers
+
+.followedUsers {
+  overflow: hidden;
+  margin: 0 0 -8px -15px;
+
+  li {
+    margin: 0 0 8px 8px;
+    float: left;
+    width: 34px;
+    height: 34px;
+    border-radius: 100%;
+    overflow: hidden;
+
+    img {
+      vertical-align: unset;
+      width: 100%;
+      height: auto;
+      display: inline-block;
+    }
+  }
+}
+
+
+.allUsers {
+  cursor: pointer;
+  line-height: 34px;
+  color: var(--olympus-white-color);
+  background-color: var(--olympus-primary-color);
+  font-size: 10px;
+  font-weight: 800;
+}
+//uploadPhoto
+.uploadPhotoItem {
+  display: inline-block;
+  vertical-align: middle;
+  width: 100%;
+  padding: 30px;
+  text-align: center;
+  color: #c2c5d9;
+
+  & span {
+    font-size: 11px;
+    color: var(--olympus-body-font-color);
+  }
+
+  &:hover {
+    color: var(--olympus-primary-color);
+  }
+}
+
+//searchUserForm
+
+
+.searchUserFormContainer {
+  position: relative;
+  width: 340px;
+
+  .searchUserForm {
+    width: 100%;
+  }
+
+  .searchBtnWrapper {
+    background-color: var(--olympus-smoke);
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+
+

@@ -1,7 +1,9 @@
-import {authAPI, profileAPI} from "../api/api";
-import {setCurrentUser} from "./auth-reducer";
+import {profileAPI} from "../api/api";
+import {setAuthorisedUser, uploadImageSuccess} from "./auth-reducer";
+import {stopSubmit, reset} from "redux-form";
 
 const ADD_POST = 'socialNetwork/profile/ADD_POST';
+const EDIT_POST = 'socialNetwork/profile/EDIT_POST';
 const DELETE_POST = 'socialNetwork/profile/DELETE_POST';
 const SET_USER_PROFILE = 'socialNetwork/profile/SET_USER_PROFILE';
 const IS_FETCHING = 'socialNetwork/profile/IS_FETCHING';
@@ -73,6 +75,11 @@ const profileReducer = (state = initialState, action) => {
                 }
             }
             return updatedState;
+        case EDIT_POST:
+            return {
+                ...state,
+                posts: state.posts.map(post => (post.id === action.postId) ? {...post, message: action.postText} : post)
+            };
         case DELETE_POST:
             return {
                 ...state,
@@ -105,11 +112,16 @@ export const addPost = (postText) => ({
     postText
 })
 
+export const editPost = (postId, postText) => ({
+    type: EDIT_POST,
+    postId,
+    postText
+})
+
 export const deletePost = (postId) => ({
     type: DELETE_POST,
     postId
 })
-
 
 export const setUserProfile = (profile) => ({
     type: SET_USER_PROFILE,
@@ -168,24 +180,60 @@ export const updateStatus = (status) => {
     }
 }
 
-export const uploadImage = (image, userId) => {
+export const uploadImage = (image) => {
 
     return async (dispatch) => {
+        dispatch(setIsFetching(true))
+
         try {
+
             let response = await profileAPI.uploadImage(image)
             if (response.resultCode === 0) {
-                try {
-                    let responseData = await profileAPI.getUserProfile(userId)
-                    dispatch(setCurrentUser(responseData)) //WARNING!!! STATE CHANGES IN 2 PLACES
-                    dispatch(setUserProfile(responseData)) //WARNING!!! STATE CHANGES IN 2 PLACES
-                } catch (error) {
-                    console.error(error);
-                }
-                //getProfile(userId)
-                //dispatch(setStatus(status))
+                dispatch(uploadImageSuccess(response.data.photos))
+                dispatch(reset('uploadImage'));
+            }
+
+        } catch (error) {
+            console.error(error);
+            //errorResponse = error;
+
+            const errorMessage = 'Uploading image failed'
+
+            if (error.response && error.response.data) {
+                const serverErrorMessage = `${errorMessage}: ${error.message}. ${error.response.data.message}`
+
+                dispatch(stopSubmit('uploadImage', {
+                    _error: serverErrorMessage,
+                    inputFile: serverErrorMessage
+                }));
+            } else {
+                dispatch(stopSubmit('uploadImage', {
+                    _error: errorMessage,
+                    inputFile: errorMessage
+                }));
+            }
+        } finally {
+            dispatch(setIsFetching(false))
+        }
+    }
+}
+
+export const editProfile = (profile) => {
+
+    return async (dispatch) => {
+        dispatch(setIsFetching(true))
+
+        try {
+            let response = await profileAPI.editProfile(profile)
+            if (response.resultCode === 0) {
+                let userData = await profileAPI.getUserProfile(profile.userId)
+                dispatch(setAuthorisedUser(userData))
+                //dispatch(setAuthorisedUser(profile)) //??? do we need this dispatch, or need to load new profile?
             }
         } catch (error) {
             console.error(error);
+        } finally {
+            dispatch(setIsFetching(false))
         }
 
     }

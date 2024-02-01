@@ -1,8 +1,6 @@
 import React, {Component, lazy, Suspense} from "react";
-import './App.css';
 import {createHashRouter} from 'react-router-dom';
 import Homepage from "./routes/Homepage/Homepage";
-import UsersListContainer from "./components/Users/UsersList/UsersListContainer";
 import Layout from "./components/Layout/Layout";
 import ErrorPage from "./routes/ErrorPage/ErrorPage";
 import LoginPage from "./routes/LoginPage/LoginPage";
@@ -13,7 +11,13 @@ import {initializeApp} from './redux/app-reducer'
 import Preloader from "./components/common/Preloader/Preloader";
 import store from "./redux/redux-store";
 import {getIsInitialized} from "./redux/selectors/app-selectors";
-import {RouterProvider, useNavigate} from "react-router";
+import {RouterProvider} from "react-router";
+import {useAuth} from "./hook/useAuth";
+import ProfileTimeline from "./components/Profile/ProfileItem/ProfileItemTimeline/ProfileItemTimeline";
+import ProfileAbout from "./components/Profile/ProfileItem/ProfileItemAbout/ProfileItemAbout";
+import FriendsPage from "./routes/FriendsPage/FriendsPage";
+import UsersPage from "./routes/UsersPage/UsersPage";
+import classNames from 'classnames';
 
 const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
 const News = lazy(() => import('./components/News/News'));
@@ -40,8 +44,18 @@ const AppContainer = () => {
 
 class AppAPI extends Component {
 
+    catchAllUnhandledErrors = (promiseRejectionEvent) => {
+        alert("Some error occured")
+        console.error(promiseRejectionEvent)
+    }
+
     componentDidMount() {
         this.props.handleInitializeApp()
+        window.addEventListener('unhandledrejection', this.catchAllUnhandledErrors)
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('unhandledrejection', this.catchAllUnhandledErrors)
     }
 
     render() {
@@ -55,11 +69,23 @@ class AppAPI extends Component {
 
 const App = () => {
 
+    const {isAuthorized} = useAuth()
+
     return (
-        <div className="app-wrapper">
+        <div className={classNames({
+            'bg-wrapper': !isAuthorized
+        }, 'app-wrapper')}>
             <RouterProvider router={router}/>
         </div>
     )
+}
+
+export const SamuraiJsApp = () => {
+    return <Suspense fallback={<Preloader/>}>
+        <Provider store={store}>
+            <AppContainer/>
+        </Provider>
+    </Suspense>
 }
 
 const router = createHashRouter([
@@ -77,7 +103,33 @@ const router = createHashRouter([
                 path: "profile/:id?",
                 element: <RequireAuth>
                     <Profile/>
-                </RequireAuth>
+                </RequireAuth>,
+                children: [
+                    {
+                        path: "",
+                        element: <RequireAuth>
+                            <ProfileTimeline/>
+                        </RequireAuth>
+                    },
+                    {
+                        path: "about",
+                        element: <RequireAuth>
+                            <ProfileAbout/>
+                        </RequireAuth>
+                    },
+                    {
+                        path: "friends",
+                        element: <RequireAuth>
+                            <FriendsPage/>
+                        </RequireAuth>
+                    }
+                ]
+            },
+            {
+                path: "users",
+                element: <RequireAuth>
+                    <UsersPage/>
+                </RequireAuth>,
             },
             {
                 path: "dialogs",
@@ -90,12 +142,6 @@ const router = createHashRouter([
                         element: <MessageItem/>
                     }
                 ]
-            },
-            {
-                path: "users",
-                element: <RequireAuth>
-                    <UsersListContainer/>
-                </RequireAuth>,
             },
             {
                 path: "news",
@@ -118,14 +164,6 @@ const router = createHashRouter([
         ]
     }
 ]);
-
-export const SamuraiJsApp = () => {
-    return <Suspense fallback={<Preloader/>}>
-        <Provider store={store}>
-            <AppContainer/>
-        </Provider>
-    </Suspense>
-}
 
 export default SamuraiJsApp;
 
