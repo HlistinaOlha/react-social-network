@@ -14,7 +14,7 @@ const ProfileHeader = ({profile, authorisedUser, isCurrentUserAuthorised, status
     ]
     const rightMenu = [
         {name: 'friends', link: 'friends'},
-        {name: 'users', link: 'users'},
+        {name: 'users', link: '/users'},
         {name: 'settings'}
     ]
 
