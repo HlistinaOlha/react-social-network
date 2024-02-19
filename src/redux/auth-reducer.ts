@@ -1,4 +1,5 @@
 import {authAPI, profileAPI} from "../api/api";
+import {ActionTypes, Nullable, PhotosType, ProfileType} from "../types/types";
 import {stopSubmit} from "redux-form";
 
 const SET_USER_ID = 'socialNetwork/auth/SET_USER_ID';
@@ -8,24 +9,24 @@ const IS_FETCHING = 'socialNetwork/auth/IS_FETCHING';
 const SET_CAPTCHA_URL = 'socialNetwork/auth/SET_CAPTCHA_URL';
 const UPLOAD_IMAGE_SUCCESS = 'socialNetwork/profile/UPLOAD_IMAGE_SUCCESS';
 
+type CurrentActionTypes = ActionTypes<typeof actions>
+
 let initialState = {
-    authorisedUserId: null,
-    authorisedUser: null,
-    authorisedUserStatus: null,
+    authorisedUserId: null as Nullable<number>,
+    authorisedUser:null as Nullable<object>,
+    authorisedUserStatus: null as Nullable<string>,
     isFetching: false,
+    captchaUrl: null as Nullable<string>
 }
 
-export const authReducer = (state = initialState, action) => {
+export type InitialStateType = typeof initialState;
+
+export const authReducer = (state = initialState, action: CurrentActionTypes): InitialStateType => {
 
     switch (action.type) {
-        /*case SET_USER_DATA:
-            return {
-                ...state,
-                ...action.data,
-                isAuth: true
-            };*/
         case SET_USER_ID:
             return {
+                ...state,
                 authorisedUserId: action.authorisedUserId,
             };
         case SET_AUTHORISED_USER:
@@ -61,48 +62,45 @@ export const authReducer = (state = initialState, action) => {
     }
 }
 
-export const setUserId = (authorisedUserId) => ({
-    type: SET_USER_ID,
-    authorisedUserId
-})
+const actions = {
+    setUserId: (authorisedUserId: Nullable<number>) => ({
+        type: SET_USER_ID,
+        authorisedUserId
+    } as const),
+    setAuthorisedUser: (authorisedUser: Nullable<ProfileType>) => ({
+        type: SET_AUTHORISED_USER,
+        authorisedUser
+    } as const),
+    setIsFetching: (isFetching: boolean) => ({
+        type: IS_FETCHING,
+        isFetching
+    } as const),
+    setAuthorisedUserStatus: (authorisedUserStatus: string) => ({
+        type: SET_AUTHORISED_USER_STATUS,
+        authorisedUserStatus
+    } as const),
+    setCaptchaUrl: (captchaUrl: string) => ({
+        type: SET_CAPTCHA_URL,
+        captchaUrl
+    } as const),
+    uploadImageSuccess: (photos: PhotosType) => ({
+        type: UPLOAD_IMAGE_SUCCESS,
+        photos
+    } as const)
+}
 
-/*export const setUserData = (userId, email, login) => ({
-    type: SET_USER_DATA,
-    data: {
-        userId,
-        email,
-        login
-    }
-})*/
-
-export const setIsFetching = (isFetching) => ({
-    type: IS_FETCHING,
-    isFetching
-})
-
-export const setAuthorisedUser = (authorisedUser) => ({
-    type: SET_AUTHORISED_USER,
-    authorisedUser
-})
-
-export const setAuthorisedUserStatus = (authorisedUserStatus) => ({
-    type: SET_AUTHORISED_USER_STATUS,
-    authorisedUserStatus
-})
-
-export const setCaptchaUrl = (captchaUrl) => ({
-    type: SET_CAPTCHA_URL,
-    captchaUrl
-})
-
-export const uploadImageSuccess = (photos) => ({
-    type: UPLOAD_IMAGE_SUCCESS,
-    photos
-})
+export const {
+    setUserId,
+    setAuthorisedUser,
+    setIsFetching,
+    setAuthorisedUserStatus,
+    setCaptchaUrl,
+    uploadImageSuccess
+} = actions;
 
 export const handleAuth = () => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         // dispatch(setIsFetching(true))
         try {
             let response = await authAPI.getAuthUserData()
@@ -130,9 +128,11 @@ export const handleAuth = () => {
     }
 }
 
-export const login = ({email, password, rememberMe, captcha}) => {
+type LoginType = ({}: { email: string, password: string | number, rememberMe: boolean, captcha: string }) => Function
 
-    return async (dispatch) => {
+export const login: LoginType = ({email, password, rememberMe, captcha}) => {
+
+    return async (dispatch: any) => {
         try {
             let response = await authAPI.login({email, password, rememberMe, captcha})
 
@@ -147,9 +147,9 @@ export const login = ({email, password, rememberMe, captcha}) => {
                 ? response.data.messages.join(', ')
                 : 'Some error'
 
-            dispatch(stopSubmit("login", {
-                _error: errorMessage
-            }))
+             dispatch(stopSubmit("login", {
+                 _error: errorMessage
+             }))                                        //UNCOMMENT THIS CODE AFTER FIXING BUGS WITH REACT-FORM
             if (response.data.resultCode === 10) { //10
                 dispatch(getCaptcha())
             }
@@ -162,7 +162,7 @@ export const login = ({email, password, rememberMe, captcha}) => {
 
 export const logout = () => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         dispatch(setIsFetching(true))
 
         try {
@@ -183,7 +183,7 @@ export const logout = () => {
 
 export const getCaptcha = () => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
 
         try {
             let response = await authAPI.getCaptcha()

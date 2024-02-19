@@ -1,5 +1,6 @@
 import {usersAPI} from "../api/api";
 import {updateObjectInArray} from "../utils/object-helpers";
+import {ActionTypes, HeaderImageType, Nullable, PhotosType} from "../types/types";
 
 const FOLLOW = 'socialNetwork/users/FOLLOW';
 const UNFOLLOW = 'socialNetwork/users/UNFOLLOW';
@@ -7,18 +8,27 @@ const UNFOLLOW = 'socialNetwork/users/UNFOLLOW';
 const SET_USERS = 'socialNetwork/users/SET_USERS';
 const SET_FILTERED_USERS = 'socialNetwork/users/SET_FILTERED_USERS';
 
-//const SET_TOTAL_FILTERED_USERS_COUNT = 'socialNetwork/users/SET_TOTAL_FILTERED_USERS_COUNT';
 const SET_TOTAL_USERS_COUNT = 'socialNetwork/users/SET_TOTAL_USERS_COUNT';
 
 const SET_PAGE = 'socialNetwork/users/SET_PAGE';
 const IS_FETCHING = 'socialNetwork/users/IS_FETCHING';
 const IS_FOLLOWING_IN_PROGRESS = 'socialNetwork/users/IS_FOLLOWING_IN_PROGRESS';
 
+type CurrentActionTypes = ActionTypes<typeof actions>
+
+type UserType = {
+    id: number,
+    name: string,
+    status: Nullable<string>,
+    photos: PhotosType,
+    followed: boolean
+}
+
 let initialState = {
-    users: [],
-    filteredUsers: [],
+    users: null as Nullable<Array<UserType>>,
+    filteredUsers: [] as Nullable<Array<UserType>>,
     isFetching: true,
-    followingInProgress: [],
+    followingInProgress: [] as Array<number>, //array of users ids
     pagination: {
         currentPage: 1,
         pageSize: 8,
@@ -57,10 +67,12 @@ let initialState = {
             id: 8,
             image: 'friend8',
         },
-    ]
+    ] as Array<HeaderImageType>
 }
 
-export const usersReducer = (state = initialState, action) => {
+export type InitialStateType = typeof initialState;
+
+export const usersReducer = (state = initialState, action: CurrentActionTypes): InitialStateType => {
 
     switch (action.type) {
         case FOLLOW:
@@ -120,57 +132,58 @@ export const usersReducer = (state = initialState, action) => {
     }
 }
 
-export const follow = (userId) => ({
-    type: FOLLOW,
-    userId
-})
+const actions = {
+    follow: (userId: number) => ({
+        type: FOLLOW,
+        userId
+    } as const),
+    unfollow: (userId: number) => ({
+        type: UNFOLLOW,
+        userId
+    } as const),
+    setUsers: (users: Array<UserType>) => ({
+        type: SET_USERS,
+        users
+    } as const),
+    setFilteredUsers: (filteredUsers: Array<UserType>) => ({
+        type: SET_FILTERED_USERS,
+        filteredUsers
+    } as const),
+    setTotalUsersCount: (total: number) => ({
+        type: SET_TOTAL_USERS_COUNT,
+        total
+    } as const),
+    setPage: (currentPage: number) => ({
+        type: SET_PAGE,
+        currentPage
+    } as const),
+    setIsFetching: (isFetching: boolean) => ({
+        type: IS_FETCHING,
+        isFetching
+    } as const),
+    setIsFollowingInProgress: (isFollowingInProgress: boolean, userId: number) => ({
+        type: IS_FOLLOWING_IN_PROGRESS,
+        isFollowingInProgress,
+        userId
+    } as const)
+}
 
-export const unfollow = (userId) => ({
-    type: UNFOLLOW,
-    userId
-})
-
-export const setUsers = (users) => ({
-    type: SET_USERS,
-    users
-})
-
-export const setFilteredUsers = (filteredUsers) => ({
-    type: SET_FILTERED_USERS,
-    filteredUsers
-})
-
-/*export const setTotalFilteredUsersCount = (total) => ({
-    type: SET_TOTAL_FILTERED_USERS_COUNT,
-    total
-})*/
-
-export const setTotalUsersCount = (total) => ({
-    type: SET_TOTAL_USERS_COUNT,
-    total
-})
-
-export const setPage = (currentPage) => ({
-    type: SET_PAGE,
-    currentPage
-})
-
-export const setIsFetching = (isFetching) => ({
-    type: IS_FETCHING,
-    isFetching
-})
-
-export const setIsFollowingInProgress = (isFollowingInProgress, userId) => ({
-    type: IS_FOLLOWING_IN_PROGRESS,
-    isFollowingInProgress,
-    userId
-})
+export const {
+    follow,
+    unfollow,
+    setUsers,
+    setFilteredUsers,
+    setTotalUsersCount,
+    setPage,
+    setIsFetching,
+    setIsFollowingInProgress
+} = actions;
 
 //thunkCreator:
-export const getUsers = (isFriend, nameString, page, pageSize) => {
+export const getUsers = (isFriend: boolean, nameString: string, page: number, pageSize: number) => {
 
 //thunk:
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         dispatch(setIsFetching(true))
 
         try {
@@ -184,7 +197,7 @@ export const getUsers = (isFriend, nameString, page, pageSize) => {
     }
 }
 
-const followUnfollowFlow = async (dispatch, userId, apiMethod, actionCreator) => {
+const followUnfollowFlow = async (dispatch: any, userId: number, apiMethod: any, actionCreator: any) => {
 
     dispatch(setIsFollowingInProgress(true, userId))
     try {
@@ -199,16 +212,16 @@ const followUnfollowFlow = async (dispatch, userId, apiMethod, actionCreator) =>
 
 }
 
-export const followUser = (userId) => {
+export const followUser = (userId: number) => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         await followUnfollowFlow(dispatch, userId, usersAPI.followUser.bind(userId), follow)
     }
 }
 
-export const unfollowUser = (userId) => {
+export const unfollowUser = (userId: number) => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         await followUnfollowFlow(dispatch, userId, usersAPI.unfollowUser.bind(userId), unfollow)
     }
 }

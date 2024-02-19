@@ -19,6 +19,8 @@ const ProfileAbout = ({}) => {
     const {authorisedUser, authorisedUserId} = useAuth()
     const selectedUserId = useParams().id
     const isCurrentUserAuthorised = !selectedUserId || (authorisedUserId === +selectedUserId);
+    const contacts = authorisedUser && isCurrentUserAuthorised ? authorisedUser.contacts : profile.contacts;
+    const contactsKeys = Object.keys(contacts);
 
     const additionalInfo = (profile) => (
         profile.lookingForAJobDescription &&
@@ -35,8 +37,7 @@ const ProfileAbout = ({}) => {
                              title="Personal Info"
                              additionalInfo={additionalInfo(profile)}
                 >
-                    <Contacts
-                        contacts={authorisedUser && isCurrentUserAuthorised ? authorisedUser.contacts : profile.contacts}/>
+                    {contacts && contactsKeys.length > 0 && <Contacts contacts={contacts} contactsKeys={contactsKeys}/>}
                 </ProfileData>
             </Col>
             <Col xs={8}>
@@ -46,14 +47,14 @@ const ProfileAbout = ({}) => {
     )
 }
 
-const Contacts = ({contacts}) => {
-    const contactsKeys = Object.keys(contacts);
+const Contacts = ({contacts, contactsKeys}) => {
+
 
     return (
         <div className={`${styles.socials} ${styles.widget}`}>
             <h6 className={styles.title}>Other Social Networks:</h6>
             {
-                contacts && contactsKeys.length > 0 ?
+
                     contactsKeys.map(key => {
                         if (contacts[key]) {
                             return <ContactsItem key={key}
@@ -63,8 +64,8 @@ const Contacts = ({contacts}) => {
                             />
                         }
                     })
-                    :
-                    <div>You have no social networks added. You can add them in your profile settings.</div>
+                    /*:
+                    <div>You have no social networks added. You can add them in your profile settings.</div>*/
 
             }
         </div>

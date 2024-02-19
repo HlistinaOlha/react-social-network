@@ -1,4 +1,4 @@
-import React, {Fragment, useRef, useState} from "react";
+import React, {Fragment, memo, useEffect, useRef, useState} from "react";
 import Preloader from "../../common/Preloader/Preloader";
 import {Form, reduxForm} from "redux-form";
 import styles from "../ProfileItem/ProfileItem.module.scss";
@@ -9,6 +9,12 @@ import {required} from "../../../utils/validators/validators";
 import SearchIcon from "@mui/icons-material/Search";
 import ClearIcon from '@mui/icons-material/Clear';
 import classNames from 'classnames';
+import Container from "react-bootstrap/Container";
+import Card from "../../UI/Card/Card";
+import CardTitle from "../../UI/Card/CardTitle";
+import {getUsers} from "../../../redux/users-reducer";
+import {useDispatch, useSelector} from "react-redux";
+import {getCurrentPage, getPageSize, getTotalUsersCount} from "../../../redux/selectors/users-selectors";
 
 const UploadImageForm = ({handleSubmit, updateImage, isFetching}) => {
 
@@ -40,24 +46,27 @@ const UploadImageForm = ({handleSubmit, updateImage, isFetching}) => {
     )
 }
 
-
 export const UploadImageReduxForm = reduxForm({form: 'uploadImage'})(UploadImageForm)
 
-const SearchUserForm = ({handleSubmit, onSubmit, formId}) => {
-
-    const [searchString, setSearchString] = useState('')
+const SearchUserForm = memo(({searchString, setSearchString, formId, loadUsers, setCurrentPage, isFriend, pageSize}) => {
 
     const searchUser = (e) => {
-        const newSearchString = e.target.value && e.target.value.trim().toLowerCase()
+        console.log(e)
+        const newSearchString = e.target.value ? e.target.value.trim().toLowerCase() : ''
         setSearchString(newSearchString)
-        onSubmit(newSearchString)
+        handleSubmit(newSearchString)
     }
 
     const clearSearchField = () => {
         setSearchString('')
     }
 
+    const handleSubmit = (searchString = '') => {
+        setCurrentPage(1)
+        loadUsers(isFriend, searchString, 1, pageSize)
+    }
 
+    console.log('SearchUserForm RERENDER')
     return (
         <div className={styles.searchUserFormContainer}>
             <Form id={formId}
@@ -84,8 +93,7 @@ const SearchUserForm = ({handleSubmit, onSubmit, formId}) => {
 
         </div>
     )
-}
-
+})
 
 export const SearchUserReduxForm = reduxForm({form: 'searchUser'})(SearchUserForm)
 

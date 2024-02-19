@@ -2,6 +2,7 @@
   display: flex;
   justify-content: center;
   padding-left: 0;
+  margin-top: 2rem;
   list-style: none;
 }
 
@@ -10,7 +11,7 @@
 }
 
 .breakLink {
-  color: var(--olympus-purple-dark);
+  color: var(--olympus-blue-light);
 }
 
 .breakItem,
@@ -19,27 +20,27 @@
 }
 
 .pageLink {
-  border-radius: 5px;
+  border-radius: .3rem;
   color: var(--olympus-white-color);
   position: relative;
   display: block;
   cursor: pointer;
   text-decoration: none;
-  background-color: var(--olympus-purple);
-  border: 1px solid var(--olympus-purple-dark);
+  background-color: var(--olympus-blue);
+  border: 1px solid var(--olympus-blue-light);
   transition: color .15s ease-in-out, background-color .15s ease-in-out, border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 
   &:hover {
     z-index: 2;
     color: var(--olympus-white-color);
-    background-color: var(--olympus-purple-dark);
-    border-color: var(--olympus-purple);
+    background-color: var(--olympus-blue-light);
+    border-color: var(--olympus-blue);
   }
 
   &:focus {
     z-index: 3;
     color: var(--olympus-white-color);
-    background-color: var(--olympus-purple-dark);
+    background-color: var(--olympus-blue);
     outline: 0;
   }
 }
@@ -51,8 +52,8 @@
 .pageItem.active .pageLink {
   z-index: 3;
   color: var(--olympus-white-color);
-  background-color: var(--olympus-purple-dark);
-  border-color: var(--olympus-purple);
+  background-color: var(--olympus-blue-light);
+  border-color: var(--olympus-blue);
 }
 
 .pageItem:first-child .pageLink {
@@ -64,10 +65,10 @@
 }
 
 .pageItem.disabled .pageLink {
-  color: var(--olympus-violet);
+  color: var(--olympus-blue);
   pointer-events: none;
   background-color: #fff;
-  border-color: var(--olympus-purple);
+  border-color: var(--olympus-blue-light);
   opacity: 0.3;
 }
 
@@ -77,7 +78,7 @@
 
 .pageItem.prev .pageLink,
 .pageItem.next .pageLink {
-  color: var(--olympus-purple);
+  color: var(--olympus-blue);
   background-color: var(--olympus-white-color);
 }
 

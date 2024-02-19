@@ -1,12 +1,13 @@
 import React from 'react';
+import { createRoot } from 'react-dom/client';
 import './index.css';
 import reportWebVitals from './reportWebVitals';
-import ReactDOM from "react-dom/client";
-import SamuraiJsApp from "./App";
 import './App.scss';
+import SamuraiJsApp from "./App";
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-
+const root = createRoot(
+    document.getElementById('root') as HTMLElement
+);
 root.render(
     <SamuraiJsApp/>
 );

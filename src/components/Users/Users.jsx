@@ -1,57 +1,35 @@
-import React, {Component, useContext, useEffect} from "react";
+import React, {Component, PureComponent, useEffect, useRef, useState} from "react";
 import Card from "../UI/Card/Card";
 import Preloader from "../common/Preloader/Preloader";
-import {Col} from "react-bootstrap";
-import CardTitle from "../UI/Card/CardTitle";
-import {SearchUserReduxForm} from "../Profile/ProfileForms/ProfileForms";
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import Container from "react-bootstrap/Container";
 import Pagination from "../common/Pagination/Pagination";
 import styles from "./Users.module.scss";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {UsersContext} from "./UsersList/UsersContext";
-import {followUser, getUsers, setIsFollowingInProgress, setPage, unfollowUser} from "../../redux/users-reducer";
+import {followUser, setIsFollowingInProgress, setPage, unfollowUser} from "../../redux/users-reducer";
 import {ProfileImageItem} from "../Profile/ProfileItem/ProfileItemImage/ProfileImage";
 import {
+    getAllUsers,
     getCurrentPage,
     getFollowingInProgress,
     getPageSize,
-    getTotalUsersCount
+    getUsersHeaderImages
 } from "../../redux/selectors/users-selectors";
+import classNames from 'classnames';
+import {getIsFetching} from "../../redux/selectors/auth-selectors";
 
-const UsersContainer = ({users, isFetching, isFriend, title, formId, headerImages}) => {
+const UsersContainer = ({isFriend, totalUsersCount, searchString, setCurrentPage, loadUsers}) => {
     const dispatch = useDispatch()
 
-    const totalUsersCount = useSelector(state => getTotalUsersCount(state))
+    const users = useSelector(state => getAllUsers(state))
+    const isFetching = useSelector(state => getIsFetching(state))
+    const headerImages = useSelector(state => getUsersHeaderImages(state))
     const pageSize = useSelector(state => getPageSize(state))
     const currentPage = useSelector(state => getCurrentPage(state))
     const followingInProgress = useSelector(state => getFollowingInProgress(state))
-
-    //const [_, __, page, pageSize] = useContext(UsersContext)
-
-    const loadUsers = (searchString, page, pageSize) => {
-        dispatch(getUsers(isFriend, searchString, page, pageSize))
-    }
-
-    const searchFilteredUsers = (data, page, pageSize) => {
-        const searchString = data.inputSearch ? data.inputSearch : data;
-        loadUsers(searchString, page, pageSize);
-    }
-
-    const setPageNum = (page) => {
-        dispatch(setPage(page))
-    }
-
-    const setCurrentPage = (page) => {
-        setPageNum(page)
-        searchFilteredUsers('', page, pageSize)
-    }
-
-    useEffect(() => {
-        if (users.length > pageSize) {
-            console.log('load')
-            searchFilteredUsers('', currentPage, pageSize)
-        }
-    }, [users])
 
     const follow = (id) => {
         dispatch(followUser(id))
@@ -65,23 +43,23 @@ const UsersContainer = ({users, isFetching, isFriend, title, formId, headerImage
         dispatch(setIsFollowingInProgress(isFetching, userId))
     }
 
+    console.log('UsersContainer RERENDER')
+
     return (
         <UsersContext.Provider value={[followUser, unfollowUser, currentPage, pageSize, totalUsersCount]}>
             <UsersAPI users={users}
                       headerImages={headerImages}
                       isFetching={isFetching}
-                      formId={formId}
-                      title={title}
                       currentPage={currentPage}
                       setCurrentPage={setCurrentPage}
                       pageSize={pageSize}
-                      setPageNum={setPageNum}
                       follow={follow}
                       unfollow={unfollow}
                       followingInProgress={followingInProgress}
                       setFollowingInProgress={setFollowingInProgress}
                       loadUsers={loadUsers}
-                      searchFilteredUsers={searchFilteredUsers}
+                      searchString={searchString}
+                      isFriend={isFriend}
             />
         </UsersContext.Provider>
     )
@@ -98,16 +76,37 @@ class UsersAPI extends Component {
     }
 
     loadComponent = (page) => {
-        this.props.loadUsers('', page, this.props.pageSize)
+        this.props.loadUsers(this.props.isFriend, this.props.searchString, page, this.props.pageSize)
     }
 
     setPage = (page) => {
-        this.props.setPageNum(page)
-        this.loadComponent(page)
+        this.props.setCurrentPage(page)
     }
 
     componentDidMount() {
-        this.loadComponent(this.props.currentPage)
+        this.loadComponent(1)
+    }
+
+    /*    shouldComponentUpdate(nextProps, nextState) {
+            console.log({nextProps, props: this.props})
+            return nextProps.currentPage !== this.props.currentPage || nextProps.searchString !== this.props.searchString;
+
+        }*/
+
+    componentDidUpdate(prevProps, prevState, snapshot) {
+        /*     if (prevProps.searchString !== this.props.searchString || prevProps.currentPage !== this.props.currentPage) {
+                 console.log('LOAD ALL AND FILTERED USERS')
+                 this.loadComponent(this.props.currentPage)
+             }*/
+
+        if (!this.props.searchString && prevProps.currentPage !== this.props.currentPage) {
+            console.log('LOAD ALL USERS')
+            this.loadComponent(this.props.currentPage)
+        }
+        if (this.props.searchString && prevProps.currentPage !== this.props.currentPage) {
+            console.log('LOAD FILTERED USERS')
+            this.loadComponent(this.props.currentPage)
+        }
     }
 
     render() {
@@ -124,7 +123,7 @@ class UsersAPI extends Component {
     }
 }
 
-const Users = ({isFetching, title, users, formId, headerImages, searchFilteredUsers, setCurrentPage, follow, unfollow}) => {
+const Users = ({isFetching, users, headerImages, setCurrentPage, followingInProgress, follow, unfollow}) => {
 
     let imageIndex = 0;
 
@@ -135,34 +134,35 @@ const Users = ({isFetching, title, users, formId, headerImages, searchFilteredUs
             </Card>
             :
             <>
-                <Col xs={12}>
-                    <Card>
-                        <CardTitle title={title}>
-                            <SearchUserReduxForm onSubmit={searchFilteredUsers}
-                                                 formId={formId}
-                            />
-                        </CardTitle>
-                    </Card>
-                </Col>
-                {
-                    users.map(user => {
-                        let index = imageIndex;
+                <Container>
+                    <Row>
+                        {
+                            users.map(user => {
+                                let index = imageIndex;
 
-                        (imageIndex >= 0 && imageIndex < headerImages.length) ? imageIndex++ : imageIndex = 0;
+                                (imageIndex >= 0 && imageIndex < headerImages.length - 1) ? imageIndex++ : imageIndex = 0;
 
-                        return <UsersItem key={user.id}
-                                          user={user}
-                                          imageIndex={index}
-                                          headerImages={headerImages}/>
+                                return <UsersItem key={user.id}
+                                                  id={user.id}
+                                                  user={user}
+                                                  imageIndex={index}
+                                                  headerImages={headerImages}
+                                                  followed={user.followed}
+                                                  follow={follow}
+                                                  unfollow={unfollow}
+                                                  followingInProgress={followingInProgress}/>
 
-                    })
-                }
+                            })
+                        }
+                    </Row>
+                </Container>
+
                 <Pagination setPage={setCurrentPage}/>
             </>
     )
 }
 
-const UsersItem = ({user, imageIndex, headerImages}) => {
+const UsersItem = ({user, id, imageIndex, headerImages, followed, follow, unfollow, followingInProgress}) => {
 
     return (
         <Col sm={3}>
@@ -183,9 +183,23 @@ const UsersItem = ({user, imageIndex, headerImages}) => {
                             </div>
                             <div className={styles.authorContent}>
                                 <NavLink to={`/profile/${user.id}`} className="h5 author-name">{user.name}</NavLink>
-                                <div>{user.status}</div>
+                                {user.status && <div>{user.status}</div>}
                             </div>
                         </div>
+                        {followed ?
+                            <button type='button'
+                                    disabled={followingInProgress.some(userId => id === userId)}
+                                    className={classNames(styles.followBtn, styles.unfollow)}
+                                    onClick={() => unfollow(id)}>
+                                Unfollow
+                            </button>
+                            : <button type='button'
+                                      disabled={followingInProgress.some(userId => id === userId)}
+                                      className={classNames(styles.followBtn, styles.follow)}
+                                      onClick={() => follow(id)}>
+                                Follow
+                            </button>
+                        }
                     </div>
                 </div>
             </Card>
