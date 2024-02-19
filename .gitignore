@@ -19,6 +19,9 @@
 .env.test.local
 .env.production.local
 
+/src/components/Dialogs
+/src/redux/store.js
+
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*

@@ -43,7 +43,7 @@ function ProfileItemContainer() {
         dispatch(getStatus(id))
     }
 
-    const loadFilteredUsers = (isFriend, nameString, page, pageSize) => {
+    const loadFilteredUsers = (isFriend, nameString, page = 1, pageSize = 10) => {
         dispatch(getUsers(isFriend, nameString, page, pageSize))
     }
 
@@ -81,7 +81,6 @@ class ProfileItemAPI extends Component {
 
     componentDidMount() {
         this.refreshProfile()
-        this.props.loadFilteredUsers(true,  '', this.props.currentPage, this.props.pageSize)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -99,6 +98,7 @@ class ProfileItemAPI extends Component {
 
         this.props.loadProfile(userId)
         this.props.loadStatus(userId)
+        this.props.loadFilteredUsers(true,  '')
     }
 
     render() {

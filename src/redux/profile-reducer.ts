@@ -1,6 +1,8 @@
 import {profileAPI} from "../api/api";
 import {setAuthorisedUser, uploadImageSuccess} from "./auth-reducer";
 import {stopSubmit, reset} from "redux-form";
+import {ActionTypes, HeaderImageType, Nullable, ProfileType} from "../types/types";
+import { AxiosError } from 'axios'
 
 const ADD_POST = 'socialNetwork/profile/ADD_POST';
 const EDIT_POST = 'socialNetwork/profile/EDIT_POST';
@@ -9,9 +11,20 @@ const SET_USER_PROFILE = 'socialNetwork/profile/SET_USER_PROFILE';
 const IS_FETCHING = 'socialNetwork/profile/IS_FETCHING';
 const SET_STATUS = 'socialNetwork/profile/GET_STATUS';
 
+type PostType = {
+    message: string,
+    likes: number,
+    id: number
+}
+
+type DialogType = {
+    name: string,
+    id: number
+}
+
 let initialState = {
-    profile: null,
-    status: '',
+    profile: null as Nullable<ProfileType>,
+    status: null as Nullable<string>,
     isFetching: true,
     topHeaderImages: [
         {
@@ -22,29 +35,29 @@ let initialState = {
             id: 2,
             image: 'topHeader2',
         },
-    ],
+    ] as Array<HeaderImageType>,
     posts: [
         {
             message: 'Hi, how are you',
-            likes: '3',
+            likes: 3,
             id: 1
         },
         {
             message: "It's my first post",
-            likes: '5',
+            likes: 5,
             id: 2
         },
         {
             message: 'Wow, that is cool',
-            likes: '13',
+            likes: 13,
             id: 3
         },
         {
             message: "I am so happy to be here!",
-            likes: '25',
+            likes: 25,
             id: 4
         },
-    ],
+    ] as Array<PostType>,
     dialogs: [
         {
             name: 'Alex',
@@ -62,16 +75,20 @@ let initialState = {
             name: 'Lena',
             id: 4
         },
-    ]
+    ] as Array<DialogType>
 }
 
-const profileReducer = (state = initialState, action) => {
+export type InitialStateType = typeof initialState;
+
+type CurrentActionTypes = ActionTypes<typeof actions>
+
+const profileReducer = (state = initialState, action: CurrentActionTypes): InitialStateType => {
 
     switch (action.type) {
         case ADD_POST:
             let updatedState = {...state};
 
-            let newPost = {
+            let newPost: PostType = {
                 message: action.postText,
                 likes: 0,
                 id: state.posts.length + 1
@@ -116,41 +133,46 @@ const profileReducer = (state = initialState, action) => {
     }
 }
 
+const actions = {
+    addPost: (postText: string) => ({
+        type: ADD_POST,
+        postText
+    } as const),
+    editPost: (postId: Nullable<number>, postText: string) => ({
+        type: EDIT_POST,
+        postId,
+        postText
+    } as const),
+    deletePost: (postId: Nullable<number>) => ({
+        type: DELETE_POST,
+        postId
+    } as const),
+    setUserProfile: (profile: Nullable<ProfileType>) => ({
+        type: SET_USER_PROFILE,
+        profile
+    } as const),
+    setIsFetching: (isFetching: boolean) => ({
+        type: IS_FETCHING,
+        isFetching
+    } as const),
+    setStatus: (status: Nullable<string>) => ({
+        type: SET_STATUS,
+        status
+    } as const)
+}
 
-export const addPost = (postText) => ({
-    type: ADD_POST,
-    postText
-})
+export const {
+    addPost,
+    editPost,
+    deletePost,
+    setUserProfile,
+    setIsFetching,
+    setStatus
+} = actions;
 
-export const editPost = (postId, postText) => ({
-    type: EDIT_POST,
-    postId,
-    postText
-})
+export const getProfile = (userId: number) => {
 
-export const deletePost = (postId) => ({
-    type: DELETE_POST,
-    postId
-})
-
-export const setUserProfile = (profile) => ({
-    type: SET_USER_PROFILE,
-    profile
-})
-
-export const setIsFetching = (isFetching) => ({
-    type: IS_FETCHING,
-    isFetching
-})
-
-export const setStatus = (status) => ({
-    type: SET_STATUS,
-    status
-})
-
-export const getProfile = (userId) => {
-
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         dispatch(setIsFetching(true))
         try {
             let response = await profileAPI.getUserProfile(userId)
@@ -163,7 +185,7 @@ export const getProfile = (userId) => {
     }
 }
 
-export const getStatus = (userId) => async (dispatch) => {
+export const getStatus = (userId: number) => async (dispatch: any) => {
     dispatch(setIsFetching(true))
     try {
         let response = await profileAPI.getStatus(userId)
@@ -175,9 +197,9 @@ export const getStatus = (userId) => async (dispatch) => {
 
 }
 
-export const updateStatus = (status) => {
+export const updateStatus = (status: string) => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         try {
             let response = await profileAPI.updateStatus(status)
             if (response.resultCode === 0) {
@@ -190,9 +212,9 @@ export const updateStatus = (status) => {
     }
 }
 
-export const uploadImage = (image) => {
+export const uploadImage = (image: string) => { //image is OBJECT?????
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         dispatch(setIsFetching(true))
 
         try {
@@ -203,34 +225,34 @@ export const uploadImage = (image) => {
                 dispatch(reset('uploadImage'));
             }
 
-        } catch (error) {
+        } catch (error: unknown) {
             console.error(error);
             //errorResponse = error;
 
-            const errorMessage = 'Uploading image failed'
+               const errorMessage = 'Uploading image failed'
 
-            if (error.response && error.response.data) {
-                const serverErrorMessage = `${errorMessage}: ${error.message}. ${error.response.data.message}`
+          if (error  instanceof AxiosError && error.response && error.response.data) {
+                 const serverErrorMessage = `${errorMessage}: ${error.message}. ${error.response.data.message}`
 
-                dispatch(stopSubmit('uploadImage', {
-                    _error: serverErrorMessage,
-                    inputFile: serverErrorMessage
-                }));
-            } else {
-                dispatch(stopSubmit('uploadImage', {
-                    _error: errorMessage,
-                    inputFile: errorMessage
-                }));
-            }
+                 dispatch(stopSubmit('uploadImage', {
+                     _error: serverErrorMessage,
+                     inputFile: serverErrorMessage
+                 }));
+             } else {
+                 dispatch(stopSubmit('uploadImage', {
+                     _error: errorMessage,
+                     inputFile: errorMessage
+                 }));
+             }
         } finally {
             dispatch(setIsFetching(false))
         }
     }
 }
 
-export const editProfile = (profile) => {
+export const editProfile = (profile: ProfileType) => {
 
-    return async (dispatch) => {
+    return async (dispatch: any) => {
         dispatch(setIsFetching(true))
 
         try {

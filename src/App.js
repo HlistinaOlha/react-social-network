@@ -7,7 +7,7 @@ import LoginPage from "./routes/LoginPage/LoginPage";
 import {AuthProvider} from "./hoc/AuthProvider";
 import {RequireAuth} from "./hoc/RequireAuth";
 import {Provider, useDispatch, useSelector} from "react-redux";
-import {initializeApp} from './redux/app-reducer'
+import {initializeApp} from './redux/app-reducer.ts'
 import Preloader from "./components/common/Preloader/Preloader";
 import store from "./redux/redux-store";
 import {getIsInitialized} from "./redux/selectors/app-selectors";
@@ -19,13 +19,7 @@ import FriendsPage from "./routes/FriendsPage/FriendsPage";
 import UsersPage from "./routes/UsersPage/UsersPage";
 import classNames from 'classnames';
 
-const DialogsContainer = lazy(() => import('./components/Dialogs/DialogsContainer'));
-const News = lazy(() => import('./components/News/News'));
-const Music = lazy(() => import('./components/Music/Music'));
-const Settings = lazy(() => import('./components/Settings/Settings'));
-const MessageItem = lazy(() => import('./components/Dialogs/MessageItem/MessageItem'));
 const Profile = lazy(() => import('./components/Profile/Profile'));
-//const App = () => { another option to write (arrow func)
 
 const AppContainer = () => {
     const dispatch = useDispatch()
@@ -129,36 +123,6 @@ const router = createHashRouter([
                 path: "users",
                 element: <RequireAuth>
                     <UsersPage/>
-                </RequireAuth>,
-            },
-            {
-                path: "dialogs",
-                element: <RequireAuth>
-                    <DialogsContainer/>
-                </RequireAuth>,
-                children: [
-                    {
-                        path: "dialogs/:id",
-                        element: <MessageItem/>
-                    }
-                ]
-            },
-            {
-                path: "news",
-                element: <RequireAuth>
-                    <News/>
-                </RequireAuth>,
-            },
-            {
-                path: "music",
-                element: <RequireAuth>
-                    <Music/>
-                </RequireAuth>,
-            },
-            {
-                path: "settings",
-                element: <RequireAuth>
-                    <Settings/>
                 </RequireAuth>,
             }
         ]
