@@ -1,6 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import React, {useState} from "react";
-import {getPageSize, getTotalUsersCount} from "../../redux/selectors/users-selectors";
+import {
+    getAllUsers,
+    getPageSize,
+    getTotalUsersCount
+} from "../../redux/selectors/users-selectors";
 import UsersContainer from "../../components/Users/Users";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -9,10 +13,13 @@ import CardTitle from "../../components/UI/Card/CardTitle";
 import {SearchUserReduxForm} from "../../components/Profile/ProfileForms/ProfileForms";
 import Container from "react-bootstrap/Container";
 import {getUsers, setPage} from "../../redux/users-reducer";
+import {getIsFetching} from "../../redux/selectors/users-selectors";
 
 const UsersPage = ({}) => {
     const dispatch = useDispatch()
 
+    const users = useSelector(state => getAllUsers(state))
+    const isFetching = useSelector(state => getIsFetching(state))
     const totalUsersCount = useSelector(state => getTotalUsersCount(state))
     const pageSize = useSelector(state => getPageSize(state))
     const isFriend = null;
@@ -45,14 +52,18 @@ const UsersPage = ({}) => {
                                 />
                             </CardTitle>
                         </Card>
+
+                        <UsersContainer users={users}
+                                        isFriend={isFriend}
+                                        isFetching={isFetching}
+                                        searchString={searchString}
+                                        setCurrentPage={setCurrentPage}
+                                        loadUsers={loadUsers}
+                                        totalUsersCount={totalUsersCount}
+                        />
                     </Col>
                 </Row>
             </Container>
-            <UsersContainer searchString={searchString}
-                            totalUsersCount={totalUsersCount}
-                            isFriend={isFriend}
-                            setCurrentPage={setCurrentPage}
-                            loadUsers={loadUsers}/>
         </>
     )
 }

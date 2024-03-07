@@ -1,31 +1,36 @@
-import React, {Component, PureComponent, useEffect, useRef, useState} from "react";
+import React, {Component} from "react";
 import Card from "../UI/Card/Card";
 import Preloader from "../common/Preloader/Preloader";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
-import Container from "react-bootstrap/Container";
 import Pagination from "../common/Pagination/Pagination";
 import styles from "./Users.module.scss";
 import {NavLink} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {UsersContext} from "./UsersList/UsersContext";
-import {followUser, setIsFollowingInProgress, setPage, unfollowUser} from "../../redux/users-reducer";
+import {followUser, setIsFollowingInProgress, unfollowUser} from "../../redux/users-reducer";
 import {ProfileImageItem} from "../Profile/ProfileItem/ProfileItemImage/ProfileImage";
 import {
-    getAllUsers,
     getCurrentPage,
     getFollowingInProgress,
     getPageSize,
     getUsersHeaderImages
 } from "../../redux/selectors/users-selectors";
 import classNames from 'classnames';
-import {getIsFetching} from "../../redux/selectors/auth-selectors";
 
-const UsersContainer = ({isFriend, totalUsersCount, searchString, setCurrentPage, loadUsers}) => {
+const UsersContainer = ({
+                            users,
+                            isFriend,
+                            isFetching,
+                            totalUsersCount,
+                            searchString,
+                            setCurrentPage,
+                            loadUsers
+                        }) => {
     const dispatch = useDispatch()
 
-    const users = useSelector(state => getAllUsers(state))
-    const isFetching = useSelector(state => getIsFetching(state))
+    //const users = useSelector(state => getAllUsers(state))
+    //const isFetching = useSelector(state => getIsFetching(state))
     const headerImages = useSelector(state => getUsersHeaderImages(state))
     const pageSize = useSelector(state => getPageSize(state))
     const currentPage = useSelector(state => getCurrentPage(state))
@@ -84,6 +89,7 @@ class UsersAPI extends Component {
     }
 
     componentDidMount() {
+        console.log('MOUNTED USERS API')
         this.loadComponent(1)
     }
 
@@ -110,16 +116,18 @@ class UsersAPI extends Component {
     }
 
     render() {
-        return <>
-            {
-                this.props.isFetching ?
-                    <Preloader/> :
-                    <Users {...this.props}
-                           follow={this.follow}
-                           unfollow={this.unfollow}
-                    />
-            }
-        </>
+        return (
+            <>
+                {
+                    this.props.isFetching ?
+                        <Preloader/> :
+                        <Users {...this.props}
+                               follow={this.follow}
+                               unfollow={this.unfollow}
+                        />
+                }
+            </>
+        )
     }
 }
 
@@ -134,29 +142,26 @@ const Users = ({isFetching, users, headerImages, setCurrentPage, followingInProg
             </Card>
             :
             <>
-                <Container>
-                    <Row>
-                        {
-                            users.map(user => {
-                                let index = imageIndex;
+                <Row>
+                    {
+                        users.map(user => {
+                            let index = imageIndex;
 
-                                (imageIndex >= 0 && imageIndex < headerImages.length - 1) ? imageIndex++ : imageIndex = 0;
+                            (imageIndex >= 0 && imageIndex < headerImages.length - 1) ? imageIndex++ : imageIndex = 0;
 
-                                return <UsersItem key={user.id}
-                                                  id={user.id}
-                                                  user={user}
-                                                  imageIndex={index}
-                                                  headerImages={headerImages}
-                                                  followed={user.followed}
-                                                  follow={follow}
-                                                  unfollow={unfollow}
-                                                  followingInProgress={followingInProgress}/>
+                            return <UsersItem key={user.id}
+                                              id={user.id}
+                                              user={user}
+                                              imageIndex={index}
+                                              headerImages={headerImages}
+                                              followed={user.followed}
+                                              follow={follow}
+                                              unfollow={unfollow}
+                                              followingInProgress={followingInProgress}/>
 
-                            })
-                        }
-                    </Row>
-                </Container>
-
+                        })
+                    }
+                </Row>
                 <Pagination setPage={setCurrentPage}/>
             </>
     )

@@ -16,8 +16,8 @@ import {useAuth} from "./hook/useAuth";
 import ProfileTimeline from "./components/Profile/ProfileItem/ProfileItemTimeline/ProfileItemTimeline";
 import ProfileAbout from "./components/Profile/ProfileItem/ProfileItemAbout/ProfileItemAbout";
 import FriendsPage from "./routes/FriendsPage/FriendsPage";
-import UsersPage from "./routes/UsersPage/UsersPage";
 import classNames from 'classnames';
+import UsersPage from "./routes/UsersPage/UsersPage";
 
 const Profile = lazy(() => import('./components/Profile/Profile'));
 
